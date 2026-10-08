@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pegasus Website Architecture</title>
+</head>
+<body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Lora:wght@500&display=swap">
+<style>
+/* Layout: a single reading column with full-width figures; each figure makes one claim, text explains it in plain words for a non-technical reader. */
+:root{
+  --bg:#ffffff; --fg:#003d3a; --muted:#4f6a66; --line:#c9d8d3; --panel:#e6eee9;
+  --teal:#2e7d6b; --soft:#8fbc8f; --deep:#003d3a; --deep-fg:#ffffff;
+  --sans:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif; --serif:"Lora",Georgia,serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1f1d;--fg:#e6eee9;--muted:#a9c2bc;--line:#2d4a45;--panel:#15302c;--teal:#8fbc8f;--soft:#8fbc8f;--deep:#1d3f3b;--deep-fg:#ffffff;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1f1d;--fg:#e6eee9;--muted:#a9c2bc;--line:#2d4a45;--panel:#15302c;--teal:#8fbc8f;--soft:#8fbc8f;--deep:#1d3f3b;--deep-fg:#ffffff;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:17px;line-height:1.6;margin:0;padding-block:40px 80px;padding-inline:clamp(16px,4vw,48px)}
+main{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.01em;text-wrap:balance;margin:0}
+h1{font-size:clamp(34px,5vw,52px);line-height:1.1}
+h2{font-size:clamp(26px,3.4vw,34px);line-height:1.2}
+h3{font-size:21px}
+p{margin:0;max-width:68ch}
+.lead{font-size:19px;color:var(--muted);max-width:60ch}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+header{display:flex;flex-direction:column;gap:16px;padding-bottom:32px;border-bottom:1px solid var(--line)}
+section{display:flex;flex-direction:column;gap:20px}
+figure{margin:0;display:flex;flex-direction:column;gap:12px}
+figure svg{width:100%;height:auto;display:block}
+.fig{background:var(--panel);border-radius:12px;padding:clamp(12px,2.5vw,28px);overflow-x:auto}
+figcaption{font-size:15px;color:var(--muted);max-width:70ch}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.card{border-top:3px solid var(--soft);padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.card h3{font-family:var(--sans);font-weight:600;font-size:17px}
+.card p{font-size:16px;color:var(--muted)}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;max-width:68ch}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--teal)}
+.tablewrap{overflow-x:auto}
+.key{display:flex;flex-wrap:wrap;gap:16px 28px;font-size:14px;color:var(--muted)}
+.key span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:22px;height:0;border-top:2px solid currentColor}
+.sw.dash{border-top-style:dashed}
+.note{background:var(--panel);border-left:4px solid var(--soft);padding:14px 18px;border-radius:0 8px 8px 0;font-size:16px;max-width:none}
+footer{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:20px}
+/* svg type */
+svg text{font-family:var(--sans);fill:currentColor}
+.t{font-size:13px}.tb{font-size:13px;font-weight:600}.ts{font-size:11.5px}.th{font-size:15px;font-weight:600}
+.box{fill:var(--bg);stroke:currentColor;stroke-width:1.4}
+.boxd{fill:var(--deep);stroke:var(--deep)}
+.boxs{fill:var(--soft);stroke:var(--soft)}
+.ln{stroke:currentColor;stroke-width:1.4;fill:none}
+.lnd{stroke:currentColor;stroke-width:1.4;fill:none;stroke-dasharray:5 4}
+.lnt{stroke:var(--teal);stroke-width:2;fill:none}
+</style>
+
+<main>
+<header>
+  <span class="eyebrow">Pegasus Medical Centre · website</span>
+  <h1>How the website fits together</h1>
+  <p class="lead">Four pictures that show how the clinic's website works: who changes what, where the information lives, how the pages are built from it, and what happens when a patient books. Written for a reader who prefers to see it rather than read it.</p>
+</header>
+
+<!-- ============ 1. SYSTEM FLOW ============ -->
+<section>
+  <span class="eyebrow">1 · The big picture</span>
+  <h2>Two systems, one website</h2>
+  <p>The website is made of two parts. A <strong>content back office</strong> where clinic staff type in hours, doctors, services and notices, and the <strong>public website</strong> that patients see. The website reads from the back office and rebuilds itself whenever something is published. Booking and enquiries deliberately happen outside both, so no patient information is ever stored in the website.</p>
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 1040 460" role="img" aria-label="Clinic staff publish content into the back office; the website rebuilds from it and serves patients; the Book button opens the clinic's own booking system; enquiries go to the clinic's email; analytics records clicks only.">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+        <marker id="art" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2e7d6b"/></marker>
+      </defs>
+      <!-- Staff -->
+      <rect class="box" x="20" y="150" width="170" height="90" rx="10"/>
+      <text class="th" x="105" y="186" text-anchor="middle">Clinic staff</text>
+      <text class="ts" x="105" y="206" text-anchor="middle">manager, front desk,</text>
+      <text class="ts" x="105" y="221" text-anchor="middle">Kempyre (maintenance)</text>
+      <!-- CMS -->
+      <rect class="box boxd" x="260" y="130" width="210" height="130" rx="10"/>
+      <text class="th" x="365" y="166" text-anchor="middle" style="fill:var(--deep-fg)">Content back office</text>
+      <text class="ts" x="365" y="186" text-anchor="middle" style="fill:var(--deep-fg)">Sanity · free plan</text>
+      <text class="ts" x="365" y="210" text-anchor="middle" style="fill:var(--deep-fg)">hours · doctors · services</text>
+      <text class="ts" x="365" y="226" text-anchor="middle" style="fill:var(--deep-fg)">locations · FAQs · notices</text>
+      <text class="ts" x="365" y="242" text-anchor="middle" style="fill:var(--deep-fg)">booking link · emergency text</text>
+      <!-- Website -->
+      <rect class="box boxd" x="540" y="130" width="210" height="130" rx="10"/>
+      <text class="th" x="645" y="166" text-anchor="middle" style="fill:var(--deep-fg)">Public website</text>
+      <text class="ts" x="645" y="186" text-anchor="middle" style="fill:var(--deep-fg)">Next.js · hosted on Vercel</text>
+      <text class="ts" x="645" y="210" text-anchor="middle" style="fill:var(--deep-fg)">pages built in advance,</text>
+      <text class="ts" x="645" y="226" text-anchor="middle" style="fill:var(--deep-fg)">served fast, nothing to</text>
+      <text class="ts" x="645" y="242" text-anchor="middle" style="fill:var(--deep-fg)">log in to, EN · FR · PT</text>
+      <!-- Patients -->
+      <rect class="box" x="840" y="150" width="180" height="90" rx="10"/>
+      <text class="th" x="930" y="186" text-anchor="middle">Patients</text>
+      <text class="ts" x="930" y="206" text-anchor="middle">phone, tablet, computer</text>
+      <text class="ts" x="930" y="221" text-anchor="middle">Google search and Maps</text>
+      <!-- arrows main -->
+      <line class="ln" x1="190" y1="195" x2="258" y2="195" marker-end="url(#ar)"/>
+      <text class="ts" x="224" y="184" text-anchor="middle">types,</text>
+      <text class="ts" x="224" y="212" text-anchor="middle">publishes</text>
+      <line class="ln" x1="470" y1="195" x2="538" y2="195" marker-end="url(#ar)"/>
+      <text class="ts" x="504" y="184" text-anchor="middle">rebuilds</text>
+      <text class="ts" x="504" y="212" text-anchor="middle">in ~1 min</text>
+      <line class="ln" x1="750" y1="195" x2="838" y2="195" marker-end="url(#ar)"/>
+      <text class="ts" x="794" y="184" text-anchor="middle">reads pages</text>
+      <!-- Booking system -->
+      <rect class="box" x="560" y="330" width="200" height="90" rx="10"/>
+      <text class="th" x="660" y="364" text-anchor="middle">Clinic booking system</text>
+      <text class="ts" x="660" y="384" text-anchor="middle">the clinic's own EMR or</text>
+      <text class="ts" x="660" y="399" text-anchor="middle">booking tool, to be named</text>
+      <path class="lnt" d="M930 240 V375 H762" marker-end="url(#art)"/>
+      <text class="ts" x="920" y="300" text-anchor="end" style="fill:var(--teal)">Book button opens it</text>
+      <text class="ts" x="920" y="315" text-anchor="end" style="fill:var(--teal)">(one link, set in the back office)</text>
+      <!-- Enquiry -->
+      <rect class="box" x="300" y="330" width="200" height="90" rx="10"/>
+      <text class="th" x="400" y="364" text-anchor="middle">Clinic email inbox</text>
+      <text class="ts" x="400" y="384" text-anchor="middle">enquiry form sends here;</text>
+      <text class="ts" x="400" y="399" text-anchor="middle">nothing kept on the website</text>
+      <path class="lnd" d="M600 260 V305 H420 V328" marker-end="url(#ar)"/>
+      <text class="ts" x="500" y="298" text-anchor="middle">enquiry form</text>
+      <!-- Analytics -->
+      <rect class="box" x="40" y="330" width="200" height="90" rx="10"/>
+      <text class="th" x="140" y="364" text-anchor="middle">Visit counts</text>
+      <text class="ts" x="140" y="384" text-anchor="middle">which pages, how many</text>
+      <text class="ts" x="140" y="399" text-anchor="middle">Book clicks. No names, ever.</text>
+      <path class="lnd" d="M580 260 V280 H140 V328" marker-end="url(#ar)"/>
+      <text class="ts" x="330" y="274" text-anchor="middle">page views, Book clicks</text>
+      <!-- maintenance -->
+      <path class="lnd" d="M105 150 V60 H645 V128" marker-end="url(#ar)"/>
+      <text class="ts" x="375" y="50" text-anchor="middle">Kempyre keeps the website and back office up to date (maintenance arrangement)</text>
+    </svg>
+    </div>
+    <figcaption>Staff never touch code; patients never log in. The Book button is a single link kept in the back office, so if the clinic changes booking systems, one field changes and every button on the site follows.</figcaption>
+  </figure>
+  <div class="key"><span><i class="sw"></i>information flow</span><span><i class="sw dash"></i>leaves the website, nothing stored</span><span><i class="sw" style="color:var(--teal);border-top-width:2px"></i>the patient's booking path</span></div>
+</section>
+
+<!-- ============ 2. WHO CHANGES WHAT ============ -->
+<section>
+  <span class="eyebrow">2 · Who changes what</span>
+  <h2>Two kinds of login, no developer for everyday changes</h2>
+  <div class="cols">
+    <div class="card"><h3>Editor · clinic manager, front desk</h3><p>Opening hours and holiday closures. The announcement bar ("Flu shots from 1 Nov"). Notices and articles. Questions and answers. The wording on doctor and service pages.</p></div>
+    <div class="card"><h3>Admin · clinic owner, Kempyre</h3><p>Everything an editor can, plus: the booking link, the emergency wording, the privacy contact, approving a doctor's profile before it goes live, adding a new clinic or service, and user accounts.</p></div>
+    <div class="card"><h3>Developer · only for new features</h3><p>A new kind of page, a new language, a new integration. Not needed for content, hours, photos or doctors. This is what the maintenance arrangement covers.</p></div>
+  </div>
+</section>
+
+<!-- ============ 3. CONTENT MODEL ============ -->
+<section>
+  <span class="eyebrow">3 · Where the information lives</span>
+  <h2>Seven kinds of record, each fact in one place</h2>
+  <p>Everything on the site is one of seven kinds of record. The arrows show how they link. Each fact is typed once: the York clinic's hours live on the York clinic record, and every page that shows hours reads them from there.</p>
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 1040 620" role="img" aria-label="Seven record types: Site settings feeds every page; Location offers Services; Provider works at Locations and provides Services; FAQ and Post are about Services; Page stands alone for About, New patients, Fees and Privacy.">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+      <!-- Site settings bar -->
+      <rect class="box boxd" x="20" y="20" width="1000" height="64" rx="10"/>
+      <text class="th" x="40" y="46" style="fill:var(--deep-fg)">Site settings (one record)</text>
+      <text class="ts" x="40" y="68" style="fill:var(--deep-fg)">clinic name · patient phone · enquiry email · booking link · emergency wording · privacy contact · languages switched on · announcement bar</text>
+      <text class="ts" x="1000" y="68" text-anchor="end" style="fill:var(--deep-fg)">read by every page</text>
+
+      <!-- LOCATION -->
+      <rect class="box" x="20" y="150" width="300" height="200" rx="10"/>
+      <rect class="boxs" x="20" y="150" width="300" height="34" rx="10"/>
+      <rect class="boxs" x="20" y="170" width="300" height="14"/>
+      <text class="th" x="36" y="173" style="fill:#003d3a">Location</text>
+      <text class="t" x="36" y="212">605 Rogers Rd, Unit D5, York</text>
+      <text class="ts" x="36" y="234">address · map point · phone</text>
+      <text class="ts" x="36" y="252">hours per day · walk-in hours</text>
+      <text class="ts" x="36" y="270">holiday closures · wait-time line</text>
+      <text class="ts" x="36" y="288">parking · accessibility · transit</text>
+      <text class="ts" x="36" y="306">photos · services offered here</text>
+      <text class="ts" x="36" y="332" style="fill:var(--teal)">status: open · opening soon · closed</text>
+
+      <!-- SERVICE -->
+      <rect class="box" x="420" y="150" width="300" height="200" rx="10"/>
+      <rect class="boxs" x="420" y="150" width="300" height="34" rx="10"/>
+      <rect class="boxs" x="420" y="170" width="300" height="14"/>
+      <text class="th" x="436" y="173" style="fill:#003d3a">Service</text>
+      <text class="t" x="436" y="212">Walk-in care, Family medicine, …</text>
+      <text class="ts" x="436" y="234">name · group · one-line summary</text>
+      <text class="ts" x="436" y="252">who it is for · what to bring · how long</text>
+      <text class="ts" x="436" y="270">walk-in / appointment / referral</text>
+      <text class="ts" x="436" y="288">coverage note · body text · image</text>
+      <text class="ts" x="436" y="306">where you can get this (derived)</text>
+      <text class="ts" x="436" y="332" style="fill:var(--teal)">status: live · planned · hidden</text>
+
+      <!-- PROVIDER -->
+      <rect class="box" x="220" y="430" width="300" height="170" rx="10"/>
+      <rect class="boxs" x="220" y="430" width="300" height="34" rx="10"/>
+      <rect class="boxs" x="220" y="450" width="300" height="14"/>
+      <text class="th" x="236" y="453" style="fill:#003d3a">Provider</text>
+      <text class="t" x="236" y="492">Dr. [Name], Family physician</text>
+      <text class="ts" x="236" y="514">credentials · focus · languages spoken</text>
+      <text class="ts" x="236" y="532">portrait · one line in their own voice</text>
+      <text class="ts" x="236" y="550">accepting new patients?</text>
+      <text class="ts" x="236" y="568">which clinics · which services</text>
+      <text class="ts" x="236" y="588" style="fill:var(--teal)">approved by · date (before publish)</text>
+
+      <!-- FAQ -->
+      <rect class="box" x="820" y="150" width="200" height="90" rx="10"/>
+      <rect class="boxs" x="820" y="150" width="200" height="34" rx="10"/>
+      <rect class="boxs" x="820" y="170" width="200" height="14"/>
+      <text class="th" x="836" y="173" style="fill:#003d3a">FAQ</text>
+      <text class="ts" x="836" y="210">question · answer · category</text>
+      <text class="ts" x="836" y="228">show on homepage?</text>
+
+      <!-- POST -->
+      <rect class="box" x="820" y="270" width="200" height="90" rx="10"/>
+      <rect class="boxs" x="820" y="270" width="200" height="34" rx="10"/>
+      <rect class="boxs" x="820" y="290" width="200" height="14"/>
+      <text class="th" x="836" y="293" style="fill:#003d3a">Post</text>
+      <text class="ts" x="836" y="330">notice or article · date</text>
+      <text class="ts" x="836" y="348">expiry date · pinned?</text>
+
+      <!-- PAGE -->
+      <rect class="box" x="620" y="430" width="400" height="170" rx="10"/>
+      <rect class="boxs" x="620" y="430" width="400" height="34" rx="10"/>
+      <rect class="boxs" x="620" y="450" width="400" height="14"/>
+      <text class="th" x="636" y="453" style="fill:#003d3a">Page (general information)</text>
+      <text class="t" x="636" y="492">About · New patients · Fees &amp; coverage</text>
+      <text class="t" x="636" y="512">Privacy · Accessibility · Terms</text>
+      <text class="ts" x="636" y="540">built from a small set of blocks: text,</text>
+      <text class="ts" x="636" y="558">image, two columns, steps, FAQ group,</text>
+      <text class="ts" x="636" y="576">call-to-action band</text>
+
+      <!-- relationships -->
+      <line class="ln" x1="320" y1="250" x2="418" y2="250" marker-end="url(#ar2)"/>
+      <text class="tb" x="369" y="240" text-anchor="middle">offers</text>
+      <line class="ln" x1="820" y1="195" x2="722" y2="195" marker-end="url(#ar2)"/>
+      <text class="tb" x="771" y="185" text-anchor="middle">about</text>
+      <line class="ln" x1="820" y1="315" x2="722" y2="315" marker-end="url(#ar2)"/>
+      <text class="tb" x="771" y="305" text-anchor="middle">about</text>
+      <path class="ln" d="M300 430 V390 H170 V352" marker-end="url(#ar2)"/>
+      <text class="tb" x="235" y="382" text-anchor="middle">works at</text>
+      <path class="ln" d="M440 430 V390 H570 V352" marker-end="url(#ar2)"/>
+      <text class="tb" x="505" y="382" text-anchor="middle">provides</text>
+      <!-- settings feeds -->
+      <line class="lnd" x1="170" y1="84" x2="170" y2="148" marker-end="url(#ar2)"/>
+      <line class="lnd" x1="570" y1="84" x2="570" y2="148" marker-end="url(#ar2)"/>
+      <line class="lnd" x1="920" y1="84" x2="920" y2="148" marker-end="url(#ar2)"/>
+    </svg>
+    </div>
+    <figcaption>Solid arrows are links that staff set ("this clinic offers these services"). Dashed arrows mean "reads from". "Where you can get this" on a service page and "doctors at this clinic" on a location page are worked out from the links, never typed a second time.</figcaption>
+  </figure>
+  <p class="note">Why this matters for growth: a Mississauga clinic is a second Location record marked "opening soon". Physiotherapy is a Service marked "planned". Both can exist in the back office months before they appear on the site, and switching them on is a status change, not a rebuild.</p>
+</section>
+
+<!-- ============ 4. PAGES FED BY RECORDS ============ -->
+<section>
+  <span class="eyebrow">4 · How pages are assembled</span>
+  <h2>Each page is a view of the records</h2>
+  <p>No page has its own copy of the facts. The homepage, for example, shows the York clinic's "open until 6:00 p.m." line because it reads the clinic's hours and today's date; nobody types "open until 6".</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Page</th><th>Site settings</th><th>Location</th><th>Service</th><th>Provider</th><th>FAQ</th><th>Post</th><th>Page</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Homepage</strong></td><td><span class="dot"></span></td><td><span class="dot"></span> hours, "open until"</td><td><span class="dot"></span> live only</td><td><span class="dot"></span> up to 3</td><td><span class="dot"></span> homepage set</td><td><span class="dot"></span> pinned</td><td></td></tr>
+      <tr><td><strong>Services</strong> index</td><td><span class="dot"></span></td><td></td><td><span class="dot"></span> grouped</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td><strong>Service</strong> page</td><td><span class="dot"></span></td><td><span class="dot"></span> where offered</td><td><span class="dot"></span></td><td><span class="dot"></span> who provides it</td><td><span class="dot"></span> related</td><td></td><td></td></tr>
+      <tr><td><strong>Location</strong> page</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span> offered here</td><td><span class="dot"></span> who works here</td><td><span class="dot"></span> visiting</td><td></td><td></td></tr>
+      <tr><td><strong>Our doctors</strong> / profile</td><td><span class="dot"></span></td><td><span class="dot"></span> which clinics</td><td><span class="dot"></span> which services</td><td><span class="dot"></span> approved only</td><td></td><td></td><td></td></tr>
+      <tr><td><strong>Resources</strong></td><td><span class="dot"></span></td><td></td><td></td><td></td><td><span class="dot"></span> by category</td><td><span class="dot"></span></td><td></td></tr>
+      <tr><td><strong>About, New patients, Fees, Privacy</strong></td><td><span class="dot"></span></td><td></td><td></td><td></td><td></td><td></td><td><span class="dot"></span></td></tr>
+      <tr><td><strong>Contact</strong></td><td><span class="dot"></span> email, phone</td><td><span class="dot"></span> addresses</td><td></td><td></td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 5. PATIENT PATH ============ -->
+<section>
+  <span class="eyebrow">5 · A patient's path</span>
+  <h2>From a Google search to a booked visit</h2>
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 1040 300" role="img" aria-label="A patient arrives from Google search or Maps, lands on the homepage or a service page, sees hours and services, and leaves by one of three doors: the Book button to the clinic's booking system, tap-to-call, or walking in.">
+      <defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+      <marker id="ar3t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2e7d6b"/></marker></defs>
+      <rect class="box" x="20" y="100" width="180" height="100" rx="10"/>
+      <text class="th" x="110" y="138" text-anchor="middle">Google</text>
+      <text class="ts" x="110" y="158" text-anchor="middle">"walk-in clinic York"</text>
+      <text class="ts" x="110" y="174" text-anchor="middle">Maps listing · hours</text>
+      <line class="ln" x1="200" y1="150" x2="268" y2="150" marker-end="url(#ar3)"/>
+      <rect class="box boxd" x="270" y="80" width="240" height="140" rx="10"/>
+      <text class="th" x="390" y="112" text-anchor="middle" style="fill:var(--deep-fg)">Website</text>
+      <text class="ts" x="390" y="136" text-anchor="middle" style="fill:var(--deep-fg)">homepage or a service page</text>
+      <text class="ts" x="390" y="156" text-anchor="middle" style="fill:var(--deep-fg)">open now? · what it costs?</text>
+      <text class="ts" x="390" y="172" text-anchor="middle" style="fill:var(--deep-fg)">who will I see? · how do I get there?</text>
+      <text class="ts" x="390" y="200" text-anchor="middle" style="fill:var(--deep-fg)">in English, French or Portuguese</text>
+      <!-- three exits -->
+      <path class="lnt" d="M510 120 H598" marker-end="url(#ar3t)"/>
+      <rect class="box" x="600" y="40" width="420" height="60" rx="10"/>
+      <text class="tb" x="620" y="64">Book an appointment</text>
+      <text class="ts" x="620" y="84">opens the clinic's booking system in a new tab; the website keeps nothing</text>
+      <text class="ts" x="840" y="112" text-anchor="start">one link, changeable in the back office</text>
+      <line class="ln" x1="510" y1="150" x2="598" y2="150" marker-end="url(#ar3)"/>
+      <rect class="box" x="600" y="125" width="420" height="50" rx="10"/>
+      <text class="tb" x="620" y="146">Call 416 656 7272</text>
+      <text class="ts" x="620" y="164">tap-to-call on a phone; a person answers at the clinic</text>
+      <line class="ln" x1="510" y1="180" x2="598" y2="235" marker-end="url(#ar3)"/>
+      <rect class="box" x="600" y="210" width="420" height="50" rx="10"/>
+      <text class="tb" x="620" y="231">Walk in</text>
+      <text class="ts" x="620" y="249">directions, parking and today's walk-in hours from the Location record</text>
+      <text class="ts" x="390" y="262" text-anchor="middle">Enquiry form: name, phone, preferred day → clinic email. Never health details on the website.</text>
+    </svg>
+    </div>
+    <figcaption>Three ways out of every page, always visible: book, call, or walk in. The patient never creates an account on the website and the website never stores their details.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 6. DECISIONS ============ -->
+<section>
+  <span class="eyebrow">6 · Decisions still open</span>
+  <h2>What the clinic needs to tell us before this is final</h2>
+  <ul>
+    <li><strong>Booking:</strong> which system patients book with today, and whether there is an online booking link to put behind the Book button. If there is none, the button says "Call to book".</li>
+    <li><strong>Enquiries:</strong> the clinic email address the enquiry form should deliver to (a clinic inbox, not a personal one).</li>
+    <li><strong>Services at launch:</strong> which of the named areas of care are live on day one, and their public names.</li>
+    <li><strong>Providers:</strong> names, titles, credentials, languages and photos for the three launch profiles, each approved by the provider.</li>
+    <li><strong>Languages:</strong> English and Portuguese at launch, French switched on when its pages are translated. Confirm who provides translations.</li>
+  </ul>
+</section>
+
+<footer>Prepared by Kempyre Groups for Pegasus Medical Centre · October 2026 · Companion to the written architecture review and the content model (v1).</footer>
+</main>
+
+</body>
+</html>
