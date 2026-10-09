@@ -13,6 +13,12 @@
       "skillPath": "skills/copywriting/SKILL.md",
       "computedHash": "34095dc1ba236967c7515c62568591008f8ec795e1a5fd4b018f2b127a36b32c"
     },
+    "next-dev-loop": {
+      "source": "vercel/next.js",
+      "sourceType": "github",
+      "skillPath": "skills/next-dev-loop/SKILL.md",
+      "computedHash": "c305c83b726212e0284930c65cded2c4a4ab85f9bfccfa83b62274247fe3580e"
+    },
     "schema": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",

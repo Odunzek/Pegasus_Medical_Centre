@@ -8,7 +8,9 @@ Public website for Pegasus Medical Centre, a family medicine and walk-in clinic 
 
 ## Where things live
 
-- `apps/web` — Next.js site (App Router, TypeScript, `src/` dir, no Tailwind). **Next.js here is newer than your training data**: before writing Next code, read the guide for the feature in `apps/web/node_modules/next/dist/docs/` and follow `apps/web/AGENTS.md`.
+- `apps/web` — Next.js site (App Router, TypeScript, `src/` dir, no Tailwind). **Next.js here is newer than your training data**: the rules below are imported from the app and point at version-matched docs in `apps/web/node_modules/next/dist/docs/`. Use the `next-dev-loop` skill when running or debugging the dev server.
+
+@apps/web/AGENTS.md
 - `apps/studio` — Sanity Studio (content back office). Created with `npm create sanity@latest` once the owner has signed in.
 - `docs/content-model-v1.md` — the content model. The Sanity schema must match it; change the document first, then the schema.
 - `docs/client-facts-2026-10-04.md` — confirmed facts about the clinic (address, phone, hours, services). The only source for real-world facts. Anything not in it is a placeholder and is shown in square brackets.
