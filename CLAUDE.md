@@ -11,12 +11,18 @@ Public website for Pegasus Medical Centre, a family medicine and walk-in clinic 
 - `apps/web` — Next.js site (App Router, TypeScript, `src/` dir, no Tailwind). **Next.js here is newer than your training data**: the rules below are imported from the app and point at version-matched docs in `apps/web/node_modules/next/dist/docs/`. Use the `next-dev-loop` skill when running or debugging the dev server.
 
 @apps/web/AGENTS.md
+  - `src/app/[lang]/` — every page; `params.lang` is `en`, `fr` or `pt`. English is served at the root (`/services`), French and Portuguese prefixed (`/fr/services`); `src/proxy.ts` does the rewrite. Never add a page outside `[lang]`.
+  - `src/content/index.ts` — the only place pages read content from (today typed sample data in `src/content/sample/`, later Sanity). `src/content/types.ts` mirrors the content model.
+  - `src/components/` — the shell: `SiteHeader` (Book handover), `SiteFooter`, `PhoneBar`, `actions` (`PrimaryAction`, `ArrowLink`, `CircleArrow`), `Reveal`, `OpenStatus`, `Icon`, `Logo`.
+  - `src/lib/` — `i18n.ts` (locales, shell dictionary, `localePath`, `t`), `hours.ts` (open-now in Toronto time), `booking.ts` (Book → booking URL or "Call to book").
+  - `src/app/globals.css` — the CSS variables (colours, type, space, radii); `src/app/fonts.ts` — Lora and Montserrat, self-hosted from `src/fonts/`.
+  - `public/brand/` — logo files from the brand package v1.4 (clear space cropped); `public/temp-photos/` — labelled stand-ins, never for production.
 - `apps/studio` — Sanity Studio (content back office). Created with `npm create sanity@latest` once the owner has signed in.
 - `docs/content-model-v1.md` — the content model. The Sanity schema must match it; change the document first, then the schema.
 - `docs/client-facts-2026-10-04.md` — confirmed facts about the clinic (address, phone, hours, services). The only source for real-world facts. Anything not in it is a placeholder and is shown in square brackets.
 - `docs/architecture/index.html` — how the system fits together, for the client.
 - `design/tokens.json`, `design/README.md` — the design system (colours, type scale, spacing, radius, components).
-- `.claude/skills/` — installed skills: seo-audit, schema, site-architecture, ai-seo, copywriting, vercel-react-best-practices, vercel-composition-patterns, web-design-guidelines, verification-before-completion, systematic-debugging. Use them when the task matches their description.
+- `.claude/skills/` — installed skills: seo-audit, schema, site-architecture, ai-seo, copywriting, vercel-react-best-practices, vercel-composition-patterns, web-design-guidelines, verification-before-completion, systematic-debugging, plus the project's own `new-page` and `next-dev-loop`. Use them when the task matches their description.
 
 ## Design rules (non-negotiable)
 
