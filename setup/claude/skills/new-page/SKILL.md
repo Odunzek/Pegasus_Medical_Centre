@@ -1,0 +1,21 @@
+---
+name: new-page
+description: Build or revise a page template for the Pegasus website (Services index, Service, Location, Provider, Resources, Page). Use whenever asked to create, design or implement a page or section of the site.
+---
+# Build a page for the Pegasus website
+
+Argument: the page or template name, e.g. `/new-page Service page`.
+
+1. **Read the contract first.**
+   - The record type(s) this page reads, in `docs/content-model-v1.md` ("How the pages are fed" table). The page may only show fields that exist there. If it needs a field that does not exist, stop and propose the model change first.
+   - `docs/client-facts-2026-10-04.md` for any real fact. Anything else is a placeholder in square brackets.
+   - `CLAUDE.md` design rules. Reuse existing components under `apps/web/src/components/` before writing new ones.
+2. **Plan in writing** (five to ten lines): sections top to bottom, which record fields feed each, the one primary action, phone layout differences, what you will verify. Wait for approval if the page is new; proceed if it is a revision.
+3. **Build** in `apps/web/src/app/<route>/page.tsx` with typed sample data in `apps/web/src/content/sample/` shaped exactly like the content model, so swapping to Sanity queries later changes one import.
+   - Desktop 1440 and phone 390 from the same markup; no separate mobile page.
+   - Lora for h1–h3 and primary actions; Montserrat elsewhere; no rectangular buttons; circle-arrow pattern for actions; one primary action per screen.
+   - Every image has alt text; every interactive element is a real `<a>` or `<button>` with a visible focus state; targets ≥ 44px; contrast ≥ 4.5:1.
+   - Headings in order (h1 once), landmarks (`header`, `main`, `nav`, `footer`), `lang` on the html element.
+4. **Verify before saying done.** Run `npm run lint`, `npm run typecheck`, `npm run build`. Open the page at 390px and 1440px and look at it (Playwright screenshot or the browser). List what you checked and what you could not.
+5. **Review.** Ask the `design-reviewer` and `a11y-reviewer` subagents to review the diff. Fix real findings; ignore style preferences.
+6. **Record.** If a decision was made that others need, add it to `docs/` in the same change. Commit on a branch and open a pull request with a short description and screenshots.
