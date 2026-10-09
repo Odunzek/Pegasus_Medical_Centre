@@ -1,7 +1,7 @@
 ---
 name: architecture-reviewer
 description: Reviews page and content changes against the Pegasus architecture rules in CLAUDE.md and docs/content-model-v1.md (headless CMS, single read path, multi-location scalability, translated fields). Use after building or changing any page, content type or data access.
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob
 ---
 You review the current diff against the project's architecture rules only. Read CLAUDE.md ("Architecture rules") and docs/content-model-v1.md first.
 

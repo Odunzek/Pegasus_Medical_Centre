@@ -39,6 +39,10 @@
   line-height: 27px;
 }
 
+.locName {
+  font-weight: 600;
+}
+
 .address {
   display: flex;
   align-items: flex-start;
@@ -64,8 +68,8 @@
 }
 
 .emergency {
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 16px;
+  line-height: 24px;
   color: var(--soft-green);
 }
 
@@ -83,7 +87,7 @@
 .links a {
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
+  min-height: var(--tap);
   color: var(--white);
   font-size: 17px;
   line-height: 26px;
@@ -105,8 +109,8 @@
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 12px 32px;
-  font-size: 15px;
-  line-height: 22px;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .legalLinks {
@@ -118,7 +122,7 @@
 .legalLinks a {
   color: var(--white);
   text-decoration: none;
-  min-height: 40px;
+  min-height: var(--tap);
   display: inline-flex;
   align-items: center;
 }

@@ -1,4 +1,5 @@
 .bar {
+  --focus: var(--focus-on-inverse);
   display: none;
   position: fixed;
   left: 0;

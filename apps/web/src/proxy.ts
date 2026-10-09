@@ -1,35 +1,25 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { defaultLocale, locales } from "@/lib/i18n";
 
 /**
- * URL shape: English at the root, French and Portuguese prefixed.
- *   /            → app/[lang]/page.tsx with lang = "en" (rewrite, address unchanged)
- *   /services    → /en/services internally
- *   /fr/services → served as is
- *   /en/services → redirected to /services, so each page has one address
- * Never redirects by browser language: older patients should land where the link said.
+ * URL shape: every language is prefixed (/en/services, /fr/services, /pt/services),
+ * which is what the App Router's client-side routing and prefetching expect.
+ * A path without a prefix is redirected to English: /  →  /en, /services → /en/services.
+ * Never by browser language: older patients should land where the link said.
+ * (A rewrite-based "English at the root" was tried and dropped: client prefetch
+ * cannot see server rewrites, so every English link lost instant navigation.)
  */
-
-const prefixed = ["fr", "pt"];
-
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  if (pathname === "/en" || pathname.startsWith("/en/")) {
-    const url = request.nextUrl.clone();
-    url.pathname = pathname === "/en" ? "/" : pathname.slice(3);
-    return NextResponse.redirect(url, 308);
-  }
-
-  if (prefixed.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`))) {
+  if (locales.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`))) {
     return NextResponse.next();
   }
-
   const url = request.nextUrl.clone();
-  url.pathname = pathname === "/" ? "/en" : `/en${pathname}`;
-  return NextResponse.rewrite(url);
+  url.pathname = pathname === "/" ? `/${defaultLocale}` : `/${defaultLocale}${pathname}`;
+  return NextResponse.redirect(url, 307);
 }
 
 export const config = {
-  // Everything except Next internals, static files in /public and the favicon
-  matcher: ["/((?!_next|brand|temp-photos|favicon\\.ico|icon\\.svg|apple-icon\\.png|.*\\..*).*)"],
+  // Everything except Next internals, static files in /public and metadata files
+  matcher: ["/((?!_next|brand|temp-photos|favicon\\.ico|icon\\.svg|apple-icon\\.png|sitemap\\.xml|robots\\.txt|.*\\..*).*)"],
 };

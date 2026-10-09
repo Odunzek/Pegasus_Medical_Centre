@@ -1,4 +1,5 @@
 .hero {
+  --focus: var(--focus-on-inverse);
   position: relative;
   min-height: 640px;
   height: 76vh;
@@ -74,19 +75,6 @@
   height: 10px;
   border-radius: 9999px;
   background: var(--soft-green);
-}
-
-.temp {
-  position: absolute;
-  z-index: 1;
-  top: 16px;
-  right: var(--gutter);
-  font-size: 13px;
-  line-height: 18px;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.85);
-  color: var(--deep-teal);
 }
 
 .intro {

@@ -2,20 +2,22 @@ import type { Service } from "../types";
 
 /**
  * Services named in discovery (docs/client-facts-2026-10-04.md). Which are live at
- * launch, and their public names, are still to be confirmed (questionnaire 2.1 / 2.2),
- * so the copy below is a draft and the "planned" four show only in the quiet line.
+ * launch, and their public names, are still to be confirmed (questionnaire 2.1 / 2.2).
+ * Every record is review: "draft": production hides it; preview builds show it marked Draft.
+ * Nothing here repeats hours, phone or address; those come from Location.
  */
 export const services: Service[] = [
   {
     slug: "family-medicine",
     name: { en: "Family medicine", fr: "Médecine familiale", pt: "Medicina familiar" },
-    status: "live",
+    status: "live", // live-at-launch set TBC (questionnaire 2.1)
+    review: "draft",
     group: "family-medicine",
-    summary: { en: "Ongoing care from a family doctor who knows you and your history." },
-    whoFor: { en: "Anyone who wants a regular doctor for themselves or their family." },
-    whatToExpect: {
-      en: "A first visit of about [30] minutes to go through your history. Bring your health card and a list of any medicines you take.",
-    },
+    summary: { en: "[Draft] Ongoing care from a family doctor who knows you and your history." },
+    whoFor: { en: "[Draft] Anyone who wants a regular doctor for themselves or their family." },
+    whatToExpect: { en: "[Draft] A first visit to go through your history and what matters to you." },
+    whatToBring: { en: "[Draft] Your health card, if you have one, and a list of any medicines you take." },
+    howLong: { en: "[About 30 minutes, to be confirmed]" },
     access: "appointment",
     coverage: { kind: "depends" },
     body: {
@@ -23,7 +25,7 @@ export const services: Service[] = [
     },
     image: {
       src: "/temp-photos/pmc-01-hero-doctor-older-patient.jpg",
-      alt: { en: "[Temporary photo] Doctor talking with an older patient" },
+      alt: { en: "Doctor talking with an older patient" },
       width: 1920,
       height: 1080,
       temporary: true,
@@ -32,18 +34,19 @@ export const services: Service[] = [
   {
     slug: "walk-in",
     name: { en: "Walk-in clinic", fr: "Clinique sans rendez-vous", pt: "Atendimento sem marcação" },
-    status: "live",
+    status: "live", // live-at-launch set TBC (questionnaire 2.1)
+    review: "draft",
     group: "walk-in",
-    summary: { en: "Same-day care for colds, infections, minor injuries and anything that cannot wait." },
-    whoFor: { en: "Anyone, with or without a family doctor here." },
-    whatToExpect: {
-      en: "Come in during opening hours and register at the desk. [Typical wait: to be confirmed by the clinic.]",
-    },
+    summary: { en: "[Draft] Same-day care for colds, infections, minor injuries and anything that cannot wait." },
+    whoFor: { en: "[Draft] Anyone, with or without a family doctor here." },
+    whatToExpect: { en: "[Draft] Come in during opening hours and register at the desk. You will be seen in order of arrival unless something is urgent." },
+    whatToBring: { en: "[Draft] Your health card, if you have one." },
+    howLong: { en: "[Typical wait: to be confirmed by the clinic]" },
     access: "walk-in",
     coverage: { kind: "depends" },
     image: {
       src: "/temp-photos/pmc-04-registration-desk.jpg",
-      alt: { en: "[Temporary photo] Patient registering at the front desk" },
+      alt: { en: "Patient registering at the front desk" },
       width: 1600,
       height: 1068,
       temporary: true,
@@ -52,13 +55,14 @@ export const services: Service[] = [
   {
     slug: "childrens-health",
     name: { en: "Children's health", fr: "Santé des enfants", pt: "Saúde infantil" },
-    status: "live",
+    status: "live", // live-at-launch set TBC (questionnaire 2.1)
+    review: "draft",
     group: "children",
-    summary: { en: "Check-ups, immunisations and care when your child is unwell." },
+    summary: { en: "[Draft] Check-ups, immunizations and care when your child is unwell." },
     access: "both",
     image: {
       src: "/temp-photos/pmc-09-family-visit.jpg",
-      alt: { en: "[Temporary photo] A parent and child at a clinic visit" },
+      alt: { en: "A parent and child at a clinic visit" },
       width: 1600,
       height: 900,
       temporary: true,
@@ -67,13 +71,14 @@ export const services: Service[] = [
   {
     slug: "chronic-disease",
     name: { en: "Chronic disease management", fr: "Suivi des maladies chroniques", pt: "Gestão de doenças crónicas" },
-    status: "live",
+    status: "live", // live-at-launch set TBC (questionnaire 2.1)
+    review: "draft",
     group: "chronic",
-    summary: { en: "Regular follow-up for diabetes, blood pressure, asthma and other long-term conditions." },
+    summary: { en: "[Draft] Regular follow-up for diabetes, blood pressure, asthma and other long-term conditions." },
     access: "appointment",
     image: {
       src: "/temp-photos/pmc-10-blood-pressure.jpg",
-      alt: { en: "[Temporary photo] Blood pressure check" },
+      alt: { en: "Blood pressure check" },
       width: 1600,
       height: 900,
       temporary: true,
@@ -82,58 +87,65 @@ export const services: Service[] = [
   {
     slug: "older-adults",
     name: { en: "Care for older adults", fr: "Soins aux aînés", pt: "Cuidados para pessoas idosas" },
-    status: "live",
+    status: "live", // live-at-launch set TBC (questionnaire 2.1)
+    review: "draft",
     group: "older-adults",
-    summary: { en: "Age-related health, medication reviews and support to stay well at home." },
+    summary: { en: "[Draft] Age-related health, medication reviews and support to stay well at home." },
     access: "appointment",
   },
   {
     slug: "preventative-health",
     name: { en: "Lifestyle and preventative health", fr: "Prévention et mode de vie", pt: "Prevenção e estilo de vida" },
-    status: "live",
+    status: "live", // live-at-launch set TBC (questionnaire 2.1)
+    review: "draft",
     group: "preventative",
-    summary: { en: "Screening, vaccinations and advice to prevent problems before they start." },
+    summary: { en: "[Draft] Screening, vaccinations and advice to prevent problems before they start." },
     access: "appointment",
   },
   {
     slug: "contraception",
     name: { en: "Contraception and related care", fr: "Contraception et soins connexes", pt: "Contraceção e cuidados relacionados" },
-    status: "live",
+    status: "live", // live-at-launch set TBC (questionnaire 2.1)
+    review: "draft",
     group: "contraception",
-    summary: { en: "Advice, prescriptions and ongoing care, in confidence." },
+    summary: { en: "[Draft] Advice, prescriptions and ongoing care, in confidence." },
     access: "appointment",
   },
-  /* Planned, per discovery; shown only in the "coming later" line */
+  /* Planned, per discovery; shown only in the "coming later" line, no page */
   {
     slug: "physiotherapy",
     name: { en: "Physiotherapy", fr: "Physiothérapie", pt: "Fisioterapia" },
     status: "planned",
+    review: "draft",
     group: "allied-health",
-    summary: { en: "Planned." },
+    summary: { en: "Planned", fr: "Prévu", pt: "Previsto" },
     access: "appointment",
   },
   {
     slug: "cardiology",
     name: { en: "Cardiology", fr: "Cardiologie", pt: "Cardiologia" },
     status: "planned",
+    review: "draft",
     group: "specialist",
-    summary: { en: "Planned." },
+    summary: { en: "Planned", fr: "Prévu", pt: "Previsto" },
     access: "referral",
   },
   {
     slug: "internal-medicine",
     name: { en: "Internal medicine", fr: "Médecine interne", pt: "Medicina interna" },
     status: "planned",
+    review: "draft",
     group: "specialist",
-    summary: { en: "Planned." },
+    summary: { en: "Planned", fr: "Prévu", pt: "Previsto" },
     access: "referral",
   },
   {
     slug: "dietetics",
     name: { en: "Dietetics", fr: "Diététique", pt: "Dietética" },
     status: "planned",
+    review: "draft",
     group: "allied-health",
-    summary: { en: "Planned." },
+    summary: { en: "Planned", fr: "Prévu", pt: "Previsto" },
     access: "appointment",
   },
 ];

@@ -1,0 +1,17 @@
+.bar {
+  background: var(--surface-alt);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 500;
+}
+
+.bar p {
+  margin: 0;
+  max-width: none;
+  padding-block: 12px;
+}
+
+.bar a {
+  color: inherit;
+}

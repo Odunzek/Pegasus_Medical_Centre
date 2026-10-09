@@ -7,12 +7,13 @@ import { ArrowLink, CircleArrow, PrimaryAction } from "@/components/actions";
 import { Icon } from "@/components/Icon";
 import { Logo } from "@/components/Logo";
 import { useHeroBookGone } from "@/components/useHeroBookGone";
-import { languageName, localePath, locales, type Dictionary, type Locale } from "@/lib/i18n";
+import { fill, langTag, languageName, localePath, locales, type Dictionary, type Locale } from "@/lib/i18n";
 import styles from "./SiteHeader.module.css";
 
 export type SiteHeaderProps = {
   locale: Locale;
   dict: Dictionary;
+  clinicName: string;
   languagesEnabled: Record<Locale, boolean>;
   book: { href: string; label: string; external: boolean };
   phone: { display: string; href: string };
@@ -23,7 +24,8 @@ export type SiteHeaderProps = {
  * the hero's Book has scrolled away, a Book link. Under 1280px the nav folds into
  * a full-screen menu (a native <dialog>, so focus stays inside and Esc closes it).
  */
-export function SiteHeader({ locale, dict, languagesEnabled, book, phone }: SiteHeaderProps) {
+export function SiteHeader({ locale, dict, clinicName, languagesEnabled, book, phone }: SiteHeaderProps) {
+  const homeLabel = fill(dict.home, { name: clinicName });
   const pathname = usePathname();
   const showBook = useHeroBookGone();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -53,7 +55,7 @@ export function SiteHeader({ locale, dict, languagesEnabled, book, phone }: Site
           <Link
             href={localePath(l, current)}
             lang={l}
-            hrefLang={l}
+            hrefLang={langTag[l]}
             aria-current={l === locale ? "true" : undefined}
             aria-label={l === locale ? `${languageName[l]} (${dict.language})` : languageName[l]}
             className={`${styles.lang} ${l === locale ? styles.langOn : ""}`}
@@ -68,7 +70,7 @@ export function SiteHeader({ locale, dict, languagesEnabled, book, phone }: Site
   return (
     <header className={styles.header}>
       <div className={`wrap ${styles.bar}`}>
-        <Link href={localePath(locale, "/")} className={styles.home} aria-label={dict.home}>
+        <Link href={localePath(locale, "/")} className={styles.home} aria-label={homeLabel}>
           <Logo tone="white" height={60} priority className={styles.logoWide} />
           <Logo tone="white" compact height={44} priority className={styles.logoNarrow} />
         </Link>
@@ -87,7 +89,7 @@ export function SiteHeader({ locale, dict, languagesEnabled, book, phone }: Site
 
         <div className={styles.right}>
           {langSwitch}
-          <div className={styles.bookSlot} aria-live="polite">
+          <div className={styles.bookSlot}>
             {showBook ? (
               <ArrowLink href={book.href} className={`${styles.bookLink} rise`}>
                 {book.label}
@@ -110,7 +112,7 @@ export function SiteHeader({ locale, dict, languagesEnabled, book, phone }: Site
       <dialog ref={dialogRef} className={styles.dialog} aria-label={dict.mainMenu} onClose={() => setOpen(false)}>
         <div className={`wrap ${styles.dialogInner}`}>
           <div className={styles.dialogTop}>
-            <Link href={localePath(locale, "/")} aria-label={dict.home} onClick={() => setOpen(false)}>
+            <Link href={localePath(locale, "/")} aria-label={homeLabel} onClick={() => setOpen(false)}>
               <Logo tone="white" compact height={44} />
             </Link>
             <button type="button" className={styles.menuButton} style={{ display: "inline-flex" }} aria-label={dict.closeMenu} onClick={() => setOpen(false)}>
@@ -133,13 +135,13 @@ export function SiteHeader({ locale, dict, languagesEnabled, book, phone }: Site
             <PrimaryAction href={book.href} tone="light">
               {book.label}
             </PrimaryAction>
-            <a href={`tel:${phone.href}`} className={styles.menuCall}>
+            <a href={phone.href} className={styles.menuCall}>
               <Icon name="phone" size={22} strokeWidth={3.5} />
               {dict.callClinic}: {phone.display}
             </a>
             <div className={styles.menuLangs} role="group" aria-label={dict.language}>
               {enabledLocales.map((l) => (
-                <Link key={l} href={localePath(l, current)} lang={l} hrefLang={l} aria-current={l === locale ? "true" : undefined}>
+                <Link key={l} href={localePath(l, current)} lang={l} hrefLang={langTag[l]} aria-current={l === locale ? "true" : undefined}>
                   {languageName[l]}
                 </Link>
               ))}
@@ -151,9 +153,12 @@ export function SiteHeader({ locale, dict, languagesEnabled, book, phone }: Site
   );
 }
 
-function stripLocale(pathname: string, locale: Locale): string {
-  if (locale === "en") return pathname || "/";
-  const prefix = `/${locale}`;
-  if (pathname === prefix) return "/";
-  return pathname.startsWith(`${prefix}/`) ? pathname.slice(prefix.length) : pathname;
+/** The language-less path: /fr/services → /services. */
+function stripLocale(pathname: string, _locale: Locale): string {
+  for (const l of locales) {
+    const prefix = `/${l}`;
+    if (pathname === prefix) return "/";
+    if (pathname.startsWith(`${prefix}/`)) return pathname.slice(prefix.length);
+  }
+  return pathname || "/";
 }

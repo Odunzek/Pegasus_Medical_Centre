@@ -66,6 +66,8 @@ export function scheduleFor(location: Pick<Location, "regularHours" | "hoursExce
 export type OpenStatus =
   | { state: "open"; closesAt: string }
   | { state: "closed"; opensAt: string; opensDay: Weekday; opensToday: boolean }
+  /** Today's hours are flagged "to be confirmed": say so rather than guess. */
+  | { state: "tbc" }
   | { state: "unknown" };
 
 function addDays(date: string, n: number): string {
@@ -78,6 +80,8 @@ function addDays(date: string, n: number): string {
 export function openStatus(location: Pick<Location, "regularHours" | "hoursExceptions">, now: Date): OpenStatus {
   const clock = clinicClock(now);
   const today = scheduleFor(location, clock.date, clock.day);
+
+  if (today.tbc) return { state: "tbc" };
 
   if (!today.closed && today.open && today.close) {
     const open = toMinutes(today.open);
@@ -94,6 +98,7 @@ export function openStatus(location: Pick<Location, "regularHours" | "hoursExcep
     const date = addDays(clock.date, i);
     const day = ((clock.day + i) % 7) as Weekday;
     const s = scheduleFor(location, date, day);
+    if (s.tbc) continue;
     if (!s.closed && s.open) {
       return { state: "closed", opensAt: s.open, opensDay: day, opensToday: false };
     }
@@ -113,7 +118,36 @@ export function describeStatus(status: OpenStatus, dict: Dictionary, locale: Loc
       : fill(dict.hours.opensOn, { day: dict.hours.days[status.opensDay], time });
     return `${dict.hours.closedNow}, ${when}`;
   }
+  if (status.state === "tbc") return dict.hours.tbc;
   return "";
+}
+
+/** "9:00 a.m. to 6:00 p.m." in the locale's wording. */
+export function formatRange(open: string, close: string, dict: Dictionary, locale: Locale): string {
+  return fill(dict.hours.to, { open: formatTime(open, locale), close: formatTime(close, locale) });
+}
+
+/**
+ * A one-line summary of the regular week for static fallbacks and metadata:
+ * "Monday to Friday 9:00 a.m. to 6:00 p.m., Saturday 9:00 a.m. to 2:00 p.m." Groups
+ * consecutive days with identical hours. Days flagged tbc are bracketed.
+ */
+export function hoursSummary(location: Pick<Location, "regularHours">, dict: Dictionary, locale: Locale): string {
+  const order: Weekday[] = [1, 2, 3, 4, 5, 6, 0];
+  const groups: { from: Weekday; to: Weekday; text: string }[] = [];
+  for (const day of order) {
+    const d = location.regularHours.find((r) => r.day === day);
+    if (!d || d.closed || !d.open || !d.close) continue;
+    let text = formatRange(d.open, d.close, dict, locale);
+    if (d.tbc) text = `[${text}]`;
+    const last = groups[groups.length - 1];
+    if (last && last.text === text && order.indexOf(last.to) === order.indexOf(day) - 1) last.to = day;
+    else groups.push({ from: day, to: day, text });
+  }
+  const sep = locale === "en" ? " to " : locale === "fr" ? " au " : " a ";
+  return groups
+    .map((g) => `${dict.hours.days[g.from]}${g.from === g.to ? "" : `${sep}${dict.hours.days[g.to]}`} ${g.text}`)
+    .join(", ");
 }
 
 /** Rows for an hours table: Monday first, each day's open–close or "Closed". */
@@ -126,7 +160,7 @@ export function hoursRows(location: Pick<Location, "regularHours">, dict: Dictio
       const text = dict.hours.closed;
       return { day, label, text: d?.tbc ? `[${text}]` : text, tbc: Boolean(d?.tbc) };
     }
-    const text = `${formatTime(d.open!, locale)} – ${formatTime(d.close!, locale)}`;
+    const text = formatRange(d.open!, d.close!, dict, locale);
     return { day, label, text: d.tbc ? `[${text}]` : text, tbc: Boolean(d.tbc) };
   });
 }

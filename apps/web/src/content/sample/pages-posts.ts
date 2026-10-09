@@ -5,6 +5,7 @@ export const pages: Page[] = [
   {
     slug: "about",
     title: { en: "About the clinic", fr: "À propos de la clinique", pt: "Sobre a clínica" },
+    review: "draft",
     sections: [
       {
         type: "richText",
@@ -17,6 +18,7 @@ export const pages: Page[] = [
   {
     slug: "new-patients",
     title: { en: "New patients", fr: "Nouveaux patients", pt: "Novos pacientes" },
+    review: "draft",
     sections: [
       {
         type: "steps",
@@ -32,6 +34,7 @@ export const pages: Page[] = [
   {
     slug: "fees-and-coverage",
     title: { en: "Fees and coverage", fr: "Frais et couverture", pt: "Preços e cobertura" },
+    review: "draft",
     sections: [
       {
         type: "richText",
@@ -42,6 +45,7 @@ export const pages: Page[] = [
   {
     slug: "privacy",
     title: { en: "Privacy", fr: "Confidentialité", pt: "Privacidade" },
+    review: "draft",
     sections: [
       {
         type: "richText",
@@ -52,11 +56,12 @@ export const pages: Page[] = [
   {
     slug: "accessibility",
     title: { en: "Accessibility", fr: "Accessibilité", pt: "Acessibilidade" },
+    review: "draft",
     sections: [
       {
         type: "richText",
         body: {
-          en: "[Draft] This website is built to WCAG 2.2 AA. If anything is hard to use, call us at 416 656 7272 and we will help.",
+          en: "[Draft] This website is built to WCAG 2.2 AA. If anything is hard to use, call the clinic and we will help.",
         },
       },
     ],
@@ -64,6 +69,7 @@ export const pages: Page[] = [
   {
     slug: "terms",
     title: { en: "Terms of use", fr: "Conditions d'utilisation", pt: "Termos de utilização" },
+    review: "draft",
     sections: [{ type: "richText", body: { en: "[Terms of use to be supplied.]" } }],
   },
 ];
@@ -73,6 +79,7 @@ export const posts: Post[] = [
   {
     slug: "sample-notice",
     type: "notice",
+    review: "draft",
     title: { en: "[Sample notice: holiday hours]" },
     summary: { en: "[Example of a short notice. Replace or delete before launch.]" },
     date: "2026-10-09",

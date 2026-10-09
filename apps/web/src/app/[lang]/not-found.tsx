@@ -1,19 +1,33 @@
 import { PrimaryAction } from "@/components/actions";
+import { getPrimaryLocation, getSiteSettings, locationPhone, telHref } from "@/content";
+import { Icon } from "@/components/Icon";
+import { getDictionary } from "@/lib/i18n";
 
-/** Shown for any address that does not exist. Languages: the layout sets the page language; copy is kept to English + a short line in each. */
-export default function NotFound() {
+/**
+ * Shown for any address that does not exist. The layout has already set the page
+ * language; the words come from the dictionary and the phone from content, so
+ * nothing here is hard-coded. (not-found cannot read params, so English copy is used
+ * with the FR and PT lines beneath it.)
+ */
+export default async function NotFound() {
+  const [settings, location] = await Promise.all([getSiteSettings(), getPrimaryLocation()]);
+  const phone = locationPhone(location, settings);
+  const en = getDictionary("en");
+  const fr = getDictionary("fr");
+  const pt = getDictionary("pt");
   return (
     <section className="wrap section" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <span className="label">404</span>
-      <h1>We could not find that page.</h1>
-      <p>
-        The address may have changed. The homepage has everything: services, hours, and how to book. If you need the
-        clinic now, call 416 656 7272.
-      </p>
-      <p lang="fr-CA">Page introuvable. Retournez à l&apos;accueil ou appelez le 416 656 7272.</p>
-      <p lang="pt-PT">Página não encontrada. Volte à página inicial ou ligue para o 416 656 7272.</p>
-      <PrimaryAction href="/" icon="home">
-        Go to the homepage
+      <span className="label">{en.notFound.label}</span>
+      <h1>{en.notFound.heading}</h1>
+      <p>{en.notFound.body}</p>
+      <a href={telHref(phone)} style={{ display: "inline-flex", alignItems: "center", gap: 12, minHeight: 48, fontWeight: 600 }}>
+        <Icon name="phone" size={22} strokeWidth={3.5} />
+        {phone}
+      </a>
+      {settings.languagesEnabled.fr ? <p lang="fr-CA">{fr.notFound.body}</p> : null}
+      {settings.languagesEnabled.pt ? <p lang="pt-PT">{pt.notFound.body}</p> : null}
+      <PrimaryAction href="/en" icon="home">
+        {en.notFound.action}
       </PrimaryAction>
     </section>
   );

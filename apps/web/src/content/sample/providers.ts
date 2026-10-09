@@ -9,13 +9,13 @@ export const providers: Provider[] = [
   {
     slug: "provider-1",
     fullName: "[Dr. First Last]",
-    title: { en: "Family physician", fr: "Médecin de famille", pt: "Médico de família" },
-    credentials: ["MD", "CCFP"],
+    title: { en: "[Family physician]", fr: "[Médecin de famille]", pt: "[Médico de família]" },
+    credentials: ["[MD]", "[CCFP]"],
     focusAreas: { en: "[Focus areas]" },
-    languages: ["en", "pt"],
+    languages: ["en"], // [languages to be confirmed]
     portrait: {
       src: "/temp-photos/pmc-06-doctor-a.jpg",
-      alt: { en: "[Temporary photo] Placeholder portrait of a doctor" },
+      alt: { en: "Placeholder portrait of a doctor" },
       width: 1067,
       height: 1600,
       temporary: true,
@@ -29,13 +29,13 @@ export const providers: Provider[] = [
   {
     slug: "provider-2",
     fullName: "[Dr. First Last]",
-    title: { en: "Family physician", fr: "Médecin de famille", pt: "Médico de família" },
-    credentials: ["MD", "CCFP"],
+    title: { en: "[Family physician]", fr: "[Médecin de famille]", pt: "[Médico de família]" },
+    credentials: ["[MD]", "[CCFP]"],
     focusAreas: { en: "[Focus areas]" },
-    languages: ["en", "fr"],
+    languages: ["en"], // [languages to be confirmed]
     portrait: {
       src: "/temp-photos/pmc-07-doctor-b.jpg",
-      alt: { en: "[Temporary photo] Placeholder portrait of a doctor" },
+      alt: { en: "Placeholder portrait of a doctor" },
       width: 1600,
       height: 900,
       temporary: true,
@@ -48,13 +48,13 @@ export const providers: Provider[] = [
   {
     slug: "provider-3",
     fullName: "[First Last]",
-    title: { en: "Nurse practitioner", fr: "Infirmière praticienne", pt: "Enfermeira de prática avançada" },
-    credentials: ["NP-PHC"],
+    title: { en: "[Nurse practitioner]", fr: "[Infirmière praticienne]", pt: "[Enfermeira de prática avançada]" },
+    credentials: ["[NP-PHC]"],
     focusAreas: { en: "[Focus areas]" },
     languages: ["en"],
     portrait: {
       src: "/temp-photos/pmc-08-doctor-c.jpg",
-      alt: { en: "[Temporary photo] Placeholder portrait of a clinician" },
+      alt: { en: "Placeholder portrait of a clinician" },
       width: 1108,
       height: 1600,
       temporary: true,

@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      next:
+        patterns: ["next", "react", "react-dom", "@types/react*", "eslint-config-next"]
+      sanity:
+        patterns: ["sanity", "@sanity/*", "next-sanity"]
+      tooling:
+        patterns: ["*"]
+        exclude-patterns: ["next", "react", "react-dom", "sanity", "@sanity/*", "next-sanity"]
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

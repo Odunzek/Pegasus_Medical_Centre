@@ -1,6 +1,6 @@
 /*
   Pegasus Medical Centre — global styles.
-  Tokens follow design/tokens.json and the homepage reference (direction C).
+  These values ARE the design tokens (design/tokens.json lists the same numbers).
   Colours are the brand's six only; fonts are Lora (headlines, primary actions)
   and Montserrat (everything else), loaded by next/font in src/app/[lang]/layout.tsx.
 */
@@ -22,8 +22,8 @@
   --accent: var(--soft-green);
   --hover: var(--teal);
   --border: var(--soft-green);
-  --border-faint: rgba(0, 61, 58, 0.18);
-  --focus: var(--soft-green);
+  --focus: var(--teal);
+  --focus-on-inverse: var(--soft-green);
   --shade-hero:
     linear-gradient(180deg, rgba(0, 61, 58, 0) 0%, rgba(0, 61, 58, 0.05) 40%, rgba(0, 61, 58, 0.78) 100%),
     linear-gradient(90deg, rgba(0, 61, 58, 0.45) 0%, rgba(0, 61, 58, 0.1) 55%, rgba(0, 61, 58, 0) 100%);
@@ -173,6 +173,11 @@ a:hover {
   border-radius: 4px;
 }
 
+.on-inverse :focus-visible,
+.on-inverse:focus-visible {
+  outline-color: var(--focus-on-inverse);
+}
+
 img,
 svg,
 video {
@@ -230,7 +235,7 @@ small,
 
 .label {
   display: block;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 20px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -277,6 +282,28 @@ small,
 
 .skip-link:focus-visible {
   transform: none;
+}
+
+/* The brand feather texture: one band per page at most, 7%, never under dense text */
+.feather {
+  position: relative;
+}
+
+.feather::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  background: url("/brand/feather-line-pattern-pale-neutral-on-white.svg") center / 900px repeat;
+}
+
+.on-inverse.feather::before {
+  background-image: url("/brand/feather-line-pattern-teal-on-deep-teal.svg");
+}
+
+.feather > * {
+  position: relative;
 }
 
 /* ---------- motion ---------- */

@@ -37,7 +37,7 @@ export function PhoneBar({
           <Icon name="arrow" size={22} strokeWidth={3.4} />
         </span>
       </a>
-      <a href={`tel:${phone.href}`} className={styles.call} aria-label={`${dict.callClinic}: ${phone.display}`}>
+      <a href={phone.href} className={styles.call} aria-label={`${dict.callClinic}: ${phone.display}`}>
         {dict.call}
         <span className={`${styles.circle} ${styles.circleOutlined}`} aria-hidden="true">
           <Icon name="phone" size={22} strokeWidth={3.5} />
