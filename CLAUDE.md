@@ -24,6 +24,19 @@ Public website for Pegasus Medical Centre, a family medicine and walk-in clinic 
 - `design/tokens.json`, `design/README.md` — the design system (colours, type scale, spacing, radius, components).
 - `.claude/skills/` — installed skills: seo-audit, schema, site-architecture, ai-seo, copywriting, vercel-react-best-practices, vercel-composition-patterns, web-design-guidelines, verification-before-completion, systematic-debugging, plus the project's own `new-page` and `next-dev-loop`. Use them when the task matches their description.
 
+## Architecture rules (non-negotiable)
+
+The site is a set of **templates fed by a headless CMS**. Read `docs/content-model-v1.md` and `docs/architecture/index.html` before changing structure.
+
+- **Three parts, cleanly separated:** Sanity (content back office, edited by clinic staff), the Next.js site (reads published content, renders pages, computes things like "open now"), Vercel (hosting). Booking is an outbound link from Site settings; enquiries go through a form service to the clinic inbox. No patient data touches any of the three.
+- **Seven record types, no more:** Site settings · Location · Service · Provider · FAQ · Page · Post. A page may only show fields that exist in the model. Need a new field? Change `docs/content-model-v1.md` first, then `src/content/types.ts`, then the schema, then the page.
+- **Built for many locations from day one, even though one opens first.** Never write "the clinic" as if there is only one in code or copy structure; `Location` is a list. `/locations/[slug]` and `/services/[slug]` are templates. The homepage, footer and phone bar take the primary open location today and must handle two or more without code changes (a Locations switcher or list, not a rewrite). `Location.status` ("opening soon") lets a second clinic have a page before it has hours.
+- **Single sources of truth:** `Location.services` says which services a clinic offers; `Provider.locations` and `Provider.services` say where a provider works and what they do. Everything else (a service's "where you can get this", a location's team) is **derived** through `src/content/index.ts`, never duplicated in another record.
+- **One read path.** Pages import content only from `src/content/index.ts`. Never from `src/content/sample/` directly, never a hard-coded address, phone, hour, service name or provider name in a page. When Sanity arrives, only `index.ts` changes.
+- **Every text field a patient reads is translated** (`Translated` = `{ en, fr?, pt? }`, rendered with `t(field, locale)`); English is the fallback. Shell strings live in `src/lib/i18n.ts`. Every page lives under `app/[lang]/`.
+- **Computed, not typed:** open/closed status, "opens Monday at 9:00 a.m.", expired notices, "where you can get this" lists, provider counts. Staff enter facts; the site does the arithmetic.
+- **Nothing a receptionist might change is in code:** hours, holidays, booking link, announcement, service names, provider details, FAQs. If you are tempted to hard-code it, it belongs in a record.
+
 ## Design rules (non-negotiable)
 
 - Colours: Deep Teal `#003D3A` (text, dark bands), Teal `#2E7D6B` (links, hover), Soft Green `#8FBC8F` (accents, fills, circle arrows), Pale Neutral `#E6EEE9` (cream bands), white. No gold, no gradients except the photo shade in the hero, no glass effects, no drop shadows except the quick-action card.

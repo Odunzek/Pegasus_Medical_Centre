@@ -36,6 +36,7 @@ Copy `apps/web/.env.example` to `apps/web/.env.local` and fill in values when yo
 
 ## What reviewers check
 
+- Architecture rules in `CLAUDE.md`: content read only through `src/content/index.ts`, no hard-coded clinic facts, fields that exist in the content model, nothing that breaks when a second location is added, translated fields for patient-facing text.
 - Design rules in `CLAUDE.md`: palette only, Lora for headings and primary actions, Montserrat elsewhere, no rectangular buttons, circle-arrow actions, one primary action per screen, spacing scale, motion with a reduced-motion fallback.
 - Accessibility (WCAG 2.2 AA): contrast ≥ 4.5:1, targets ≥ 44 px, visible focus, real `<a>`/`<button>` elements, alt text on every image, headings in order, keyboard order, no horizontal scroll on phones.
 - Content: facts match `docs/client-facts-2026-10-04.md`; placeholders in brackets; no testimonials or reviews; nothing about providers that is not factual and approved.
@@ -43,7 +44,7 @@ Copy `apps/web/.env.example` to `apps/web/.env.local` and fill in values when yo
 
 ## Working with an AI assistant (optional)
 
-If you use Claude Code, Cursor, Copilot or similar, the repo is already set up for it: `CLAUDE.md` is read at the start of every session (Cursor and Copilot read `apps/web/AGENTS.md`); `.claude/skills/` holds the project's skills (`/new-page` runs the page-building workflow); `.claude/agents/` holds two read-only reviewers (design, accessibility); `.claude/settings.json` adds a lint-on-edit hook, a typecheck gate and deny rules for destructive commands. None of this is required: without it, the pull-request checks above are the same.
+If you use Claude Code, Cursor, Copilot or similar, the repo is already set up for it: `CLAUDE.md` is read at the start of every session (Cursor and Copilot read `apps/web/AGENTS.md`); `.claude/skills/` holds the project's skills (`/new-page` runs the page-building workflow); `.claude/agents/` holds three read-only reviewers (architecture, design, accessibility); `.claude/settings.json` adds a lint-on-edit hook, a typecheck gate and deny rules for destructive commands. None of this is required: without it, the pull-request checks above are the same.
 
 If you do not use an assistant, you can ignore `.claude/` and `skills-lock.json` entirely.
 
