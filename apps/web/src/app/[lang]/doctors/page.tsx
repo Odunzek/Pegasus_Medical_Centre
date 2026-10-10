@@ -1,3 +1,5 @@
+/** Our doctors (index). Placeholder until the doctors chunk; metadata is already built through pageMetadata(). */
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComingSoon } from "@/components/ComingSoon";

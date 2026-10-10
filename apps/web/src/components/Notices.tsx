@@ -1,3 +1,5 @@
+/** Small notices shown around content: the partly-English fallback note, the Draft mark (preview builds only) and the Temporary photo badge. */
+
 import type { Dictionary } from "@/lib/i18n";
 import styles from "./Notices.module.css";
 

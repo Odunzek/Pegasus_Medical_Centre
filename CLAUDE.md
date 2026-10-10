@@ -22,6 +22,7 @@ Public website for Pegasus Medical Centre, a family medicine and walk-in clinic 
 - `docs/client-facts-2026-10-04.md` — confirmed facts about the clinic and the rebrand. The only source for real-world facts. Anything not in it is a placeholder in square brackets.
 - `docs/voice-and-content-guide.md` — how the site speaks in all three languages and what it may never say. Every word a patient reads follows it.
 - `docs/content-map.md` — the page-by-page content and search plan (built with the `content-map` skill).
+- `docs/agentic-workflow.md` — how this project is built with Claude: principles, roster, gates, decisions, status; read it when picking the project up.
 - `docs/launch-checklist.md`, `docs/maintenance.md` — launch and the monthly retainer. `docs/architecture/index.html` — the client-facing diagram.
 - `design/tokens.json`, `design/README.md` — the design system (v3, direction C). They agree with `globals.css`; if not, the CSS is wrong.
 - `.claude/agents/` — the reviewers and producers listed below. `.claude/skills/` — `new-page`, `content-map`, `client-brief`, `launch-checklist`, `next-dev-loop`, plus installed reference skills (seo-audit, schema, site-architecture, ai-seo, copywriting, vercel-react-best-practices, vercel-composition-patterns, web-design-guidelines, verification-before-completion, systematic-debugging). `.claude/hooks/` — lint on edit, env guard, typecheck on stop (Node, no jq).
@@ -39,6 +40,13 @@ The site is a set of **templates fed by a headless CMS**. Read `docs/content-mod
 - **Every text field a patient reads is translated** (`Translated` = `{ en, fr?, pt? }`, rendered with `t(field, locale)`); English is the fallback and a page that fell back shows the partly-English note. Shell strings live in `src/lib/i18n.ts`. A language is public only when enabled in Site settings. One slug per record, shared by all languages; `localePath(locale, path)` builds every internal link.
 - **Computed, not typed:** open/closed status, "opens Monday at 9:00 a.m.", hours wording, expired notices (Toronto date), "where you can get this", the `tel:` link. Staff enter facts; the site does the arithmetic.
 - **Nothing a receptionist might change is in code:** hours, holidays, booking link, announcement, service names, provider details, FAQs, the homepage's words (Site settings → Homepage).
+
+## Code rules (non-negotiable)
+
+- **Nothing is hard-coded.** Not a clinic fact (those are records), not a patient-facing string (dictionary or translated field), not a colour, size or spacing (CSS variables from `globals.css`), not a URL or key (environment variables named in `.env.example`), not a magic number (a named constant with a comment saying why it has that value). If a value could reasonably change without the code changing, it does not belong in the code. `npm run check` and the `architecture-reviewer` enforce the fact part; the reviewers enforce the rest.
+- **Every file is readable by a person who did not write it.** Each file opens with a short comment (two to six lines) saying what it is for and how it fits. Every exported function, component and type carries a one-to-three line plain-English comment: what it does, what it expects, anything surprising. Inside functions, comment the *why* (a decision, a constraint, a trade-off, a workaround and what it works around), never the *what* the code already says. A comment that explains a rule links the document the rule comes from. When code changes, its comments change in the same edit; a stale comment is a bug.
+- **Small, named, boring.** Prefer a named helper over a clever expression; prefer the pattern already in the codebase over a new one; prefer deleting code to adding a flag. One component per file; CSS Modules beside the component; no inline styles except one-off layout on placeholder pages.
+- **Plain English in identifiers**: `getPrimaryLocation`, `hoursSummary`, `telHref`, never abbreviations a receptionist would not guess.
 
 ## Design rules (non-negotiable)
 

@@ -1,3 +1,5 @@
+/** Request proxy (Next.js 16's middleware): sends un-prefixed paths to the English site. */
+
 import { NextResponse, type NextRequest } from "next/server";
 import { defaultLocale, locales } from "@/lib/i18n";
 

@@ -1,3 +1,5 @@
+/** The site's actions. There are no rectangular buttons: PrimaryAction (Lora text + filled circle), ArrowLink (text + outlined circle) and CircleArrow (the circle alone, for whole-row links). Rules: CLAUDE.md "Design rules". */
+
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Icon, type IconName } from "@/components/Icon";

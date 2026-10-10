@@ -1,3 +1,5 @@
+/* Styles for the Book + Call bar pinned to the bottom of the screen on phones (under 768px). */
+
 .bar {
   --focus: var(--focus-on-inverse);
   display: none;

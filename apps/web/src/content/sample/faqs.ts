@@ -1,3 +1,5 @@
+/** Sample FAQ records (draft). The clinic's own questions arrive with questionnaire 7.7. */
+
 import type { Faq } from "../types";
 
 /** Draft questions. The clinic's own list arrives with questionnaire 7.7. */

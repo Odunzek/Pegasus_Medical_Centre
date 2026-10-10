@@ -1,3 +1,5 @@
+/* Styles for the small notices: the partly-English note, the Draft mark on preview builds, and the Temporary photo badge. */
+
 .partly {
   max-width: none;
   padding: 10px var(--gutter);

@@ -1,3 +1,5 @@
+/** Sample Provider records: placeholders only, all draft and unapproved, so none reaches a page. */
+
 import type { Provider } from "../types";
 
 /**

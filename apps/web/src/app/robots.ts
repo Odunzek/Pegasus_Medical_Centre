@@ -1,3 +1,5 @@
+/** robots.txt: previews (SHOW_DRAFTS or VERCEL_ENV=preview) are kept out of search; production is open and points at the sitemap. */
+
 import type { MetadataRoute } from "next";
 import { siteOrigin } from "@/lib/seo";
 

@@ -1,3 +1,5 @@
+/** Placeholder body for routes whose template is not built yet, so shell links never 404 while the site is being built. */
+
 import { Icon } from "@/components/Icon";
 import { getPrimaryLocation, getSiteSettings, locationPhone, telHref } from "@/content";
 import { getDictionary, type Locale } from "@/lib/i18n";

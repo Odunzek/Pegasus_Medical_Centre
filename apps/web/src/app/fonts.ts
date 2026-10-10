@@ -1,3 +1,5 @@
+/** The site's two typefaces, self-hosted with next/font so no request leaves the site for fonts. */
+
 import localFont from "next/font/local";
 
 /**

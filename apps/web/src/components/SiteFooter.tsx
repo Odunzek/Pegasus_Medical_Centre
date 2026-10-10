@@ -1,3 +1,5 @@
+/** The site footer: every open or opening-soon clinic's address and phone, the emergency line, link columns and the language list. Reads Site settings and Location records only. */
+
 import Link from "next/link";
 import { Icon } from "@/components/Icon";
 import { Logo } from "@/components/Logo";

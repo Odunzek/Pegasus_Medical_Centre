@@ -1,3 +1,5 @@
+/** Resolves what the Book action does from Site settings: the booking link, or "Call to book" while it is blank. */
+
 import { telHref } from "@/content";
 import type { SiteSettings } from "@/content/types";
 import type { Dictionary } from "@/lib/i18n";

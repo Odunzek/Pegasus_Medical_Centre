@@ -1,3 +1,5 @@
+/** Sample Page and Post records (draft): the general information pages and one example notice. */
+
 import type { Page, Post } from "../types";
 
 /** General information pages. Section content is a draft until the clinic supplies it. */

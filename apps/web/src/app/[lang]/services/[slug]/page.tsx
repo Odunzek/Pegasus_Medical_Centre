@@ -1,3 +1,5 @@
+/** One service's page (/services/[slug]). Placeholder body until the services chunk; metadata and static params come from live Service records. */
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComingSoon } from "@/components/ComingSoon";

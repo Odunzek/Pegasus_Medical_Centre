@@ -1,3 +1,5 @@
+/* Styles for the sticky Deep Teal header: logo, main nav (folds into a full-screen menu under 1280px), language switch, the Book link that appears after the hero's Book scrolls away. */
+
 .header {
   --focus: var(--focus-on-inverse);
   position: sticky;

@@ -45,6 +45,7 @@ Copy `apps/web/.env.example` to `apps/web/.env.local` and fill in values when yo
 Six questions, whether the reviewer is a person or one of the agents in `.claude/agents/`:
 
 - **Architecture** (`CLAUDE.md` Architecture rules): content read only through `src/content/index.ts`; no hard-coded clinic facts; fields exist in the content model; nothing breaks when a second Location record appears; every patient-facing string is a translated field; computed values are computed.
+- **Code** (`CLAUDE.md` Code rules): nothing hard-coded (facts, strings, colours, sizes, URLs, magic numbers); every file opens with a short purpose comment and every exported function or component has a plain-English comment; comments say why, not what, and are updated with the code.
 - **Design** (`design/tokens.json`, `design/README.md`): palette only, Lora for headings and primary actions, Montserrat elsewhere, no rectangular buttons, circle-arrow actions, one primary action per screen, spacing scale, motion with a reduced-motion fallback.
 - **Accessibility** (WCAG 2.2 AA): contrast ≥ 4.5:1, targets ≥ 44 px, visible focus, real `<a>`/`<button>`, alt text on every image, headings in order, keyboard order, no horizontal scroll on phones.
 - **Content** (`docs/voice-and-content-guide.md`): facts match client-facts or are bracketed; no testimonials, superlatives, guarantees or advice; Centre and Canadian spelling; the voice; French and Portuguese match the English and are marked for native review; emergency line present.

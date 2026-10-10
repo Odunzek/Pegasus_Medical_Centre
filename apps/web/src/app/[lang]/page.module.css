@@ -1,3 +1,5 @@
+/* Styles for the foundation homepage: full-bleed hero with the Deep Teal shade, the services list with rules, the welcome band. */
+
 .hero {
   --focus: var(--focus-on-inverse);
   position: relative;

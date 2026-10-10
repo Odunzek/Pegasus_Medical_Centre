@@ -1,3 +1,5 @@
+/** sitemap.xml: every public page in every enabled language, with hreflang alternates. Drafts, planned services and disabled languages are never listed. */
+
 import type { MetadataRoute } from "next";
 import { getLocations, getPages, getProviders, getServices, getSiteSettings } from "@/content";
 import { langTag, localePath, locales } from "@/lib/i18n";

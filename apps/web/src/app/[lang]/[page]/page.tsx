@@ -1,3 +1,5 @@
+/** General information pages from the Page record type (About, New patients, Fees and coverage, Privacy, Accessibility, Terms). */
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DraftMark, PartlyEnglishNote } from "@/components/Notices";

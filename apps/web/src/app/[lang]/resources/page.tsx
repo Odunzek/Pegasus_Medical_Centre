@@ -1,3 +1,5 @@
+/** Resources page (questions and answers, notices). Placeholder until the resources chunk. */
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComingSoon } from "@/components/ComingSoon";

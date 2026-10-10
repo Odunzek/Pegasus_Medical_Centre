@@ -1,3 +1,5 @@
+/** Sample Service records. All draft; live-at-launch set and public names await the client (questionnaire 2.1/2.2). */
+
 import type { Service } from "../types";
 
 /**

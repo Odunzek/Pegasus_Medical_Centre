@@ -1,3 +1,5 @@
+/* Styles for the announcement bar under the header (Pale Neutral band, one line of text). */
+
 .bar {
   background: var(--surface-alt);
   color: var(--ink);

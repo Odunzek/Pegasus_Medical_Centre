@@ -1,3 +1,5 @@
+/** The root layout for every language: fonts, metadata defaults, skip link, header, announcement bar, footer, phone bar and the clinic's structured data. Guards unknown or disabled languages. */
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { AnnouncementBar } from "@/components/AnnouncementBar";

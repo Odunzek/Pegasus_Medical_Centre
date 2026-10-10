@@ -1,3 +1,5 @@
+/** Sample Site settings record (the single global record). Replaced by Sanity later; shape is docs/content-model-v1.md. */
+
 import type { SiteSettings } from "../types";
 
 /**

@@ -1,3 +1,5 @@
+/** Contact page. Placeholder until the contact chunk (phone, address, hours, the name/phone/preferred-day form). */
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComingSoon } from "@/components/ComingSoon";

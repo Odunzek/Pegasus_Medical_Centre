@@ -1,3 +1,5 @@
+/** The 404 page. Words from the dictionary, phone from content; nothing hard-coded. */
+
 import { PrimaryAction } from "@/components/actions";
 import { getPrimaryLocation, getSiteSettings, locationPhone, telHref } from "@/content";
 import { Icon } from "@/components/Icon";

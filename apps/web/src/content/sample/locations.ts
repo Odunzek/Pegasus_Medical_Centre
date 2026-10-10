@@ -1,3 +1,5 @@
+/** Sample Location records: the York clinic, with confirmed address, phone and hours; everything else bracketed. */
+
 import type { Location } from "../types";
 
 /** One clinic at launch (York, Toronto). Hours per the questionnaire of 4 Oct 2026; Sunday and holidays TBC. */

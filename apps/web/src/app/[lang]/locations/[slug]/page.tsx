@@ -1,3 +1,5 @@
+/** One clinic's page (/locations/[slug]). Placeholder body until the location chunk; metadata and static params come from Location records. */
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComingSoon } from "@/components/ComingSoon";

@@ -1,3 +1,5 @@
+/** The Pegasus logo as an image, picking the right brand file for the background it sits on. */
+
 import Image from "next/image";
 
 /**

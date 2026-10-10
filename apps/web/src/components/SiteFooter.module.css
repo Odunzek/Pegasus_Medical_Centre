@@ -1,3 +1,5 @@
+/* Styles for the Deep Teal footer: brand column, link columns, legal row; one column on phones. */
+
 .footer {
   background: var(--surface-inverse);
   color: var(--ink-on-inverse);
