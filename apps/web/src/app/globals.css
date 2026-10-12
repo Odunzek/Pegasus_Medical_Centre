@@ -1,7 +1,7 @@
 /*
   Pegasus Medical Centre — global styles.
   These values ARE the design tokens (design/tokens.json lists the same numbers).
-  Colours are the brand's six only; fonts are Lora (headlines, primary actions)
+  Colours are the brand's five only; fonts are Lora (headlines, primary actions)
   and Montserrat (everything else), loaded by next/font in src/app/[lang]/layout.tsx.
 */
 
@@ -253,6 +253,38 @@ small,
 
 .measure {
   max-width: var(--measure);
+}
+
+/* A vertical stack of blocks with the standard gap; used by placeholder and general pages */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* A phone number as a link with the phone icon, as on the 404 and placeholder pages */
+.phone-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--tap);
+  font-weight: 600;
+}
+
+/* Intro paragraph under a page or hero headline: one step up from body text */
+.intro-text {
+  font-size: 20px;
+  line-height: 32px;
+  max-width: 560px;
+}
+
+/* Numbered steps on general pages */
+.steps {
+  padding-left: 24px;
+}
+
+.steps li + li {
+  margin-top: 12px;
 }
 
 .visually-hidden {

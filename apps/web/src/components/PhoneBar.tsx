@@ -1,7 +1,9 @@
 "use client";
 
+/** The Book + Call bar pinned to the bottom of phone screens. */
+
 import { useEffect } from "react";
-import { Icon } from "@/components/Icon";
+import { Icon, TEXT_ICON } from "@/components/Icon";
 import { useHeroBookGone } from "@/components/useHeroBookGone";
 import type { Dictionary } from "@/lib/i18n";
 import styles from "./PhoneBar.module.css";
@@ -40,7 +42,7 @@ export function PhoneBar({
       <a href={phone.href} className={styles.call} aria-label={`${dict.callClinic}: ${phone.display}`}>
         {dict.call}
         <span className={`${styles.circle} ${styles.circleOutlined}`} aria-hidden="true">
-          <Icon name="phone" size={22} strokeWidth={3.5} />
+          <Icon name="phone" {...TEXT_ICON} />
         </span>
       </a>
     </div>

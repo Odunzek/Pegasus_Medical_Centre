@@ -12,9 +12,9 @@
 
 ## Evidence
 
-- [ ] `npm run lint`, `npm run typecheck`, `npm run check`, `npm run build`, `npm run smoke` all pass locally
+- [ ] `npm run lint`, `npm run typecheck`, `npm run check`, `SHOW_DRAFTS=true npm run build`, `npm run smoke` all pass locally
 - [ ] Screenshots at 390 px and 1440 px attached (or `.smoke/` paths listed)
-- [ ] Reviewers run (architecture, design, a11y, content, seo, privacy-security) and findings fixed or explained below
+- [ ] Reviewed against the six reviewer questions in CONTRIBUTING.md (by a person, or by the agents in `.claude/agents/`) and findings fixed or explained below
 
 ## Assumptions and open questions
 

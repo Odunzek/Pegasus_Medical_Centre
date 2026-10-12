@@ -21,6 +21,7 @@ export default function proxy(request: NextRequest) {
   return NextResponse.redirect(url, 307);
 }
 
+/** Which requests the proxy sees: everything except Next internals, files in /public and the metadata files. */
 export const config = {
   // Everything except Next internals, static files in /public and metadata files
   matcher: ["/((?!_next|brand|temp-photos|favicon\\.ico|icon\\.svg|apple-icon\\.png|sitemap\\.xml|robots\\.txt|.*\\..*).*)"],

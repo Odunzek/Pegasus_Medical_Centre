@@ -7,11 +7,13 @@ import { getLocation, getLocations, getSiteSettings } from "@/content";
 import { isLocale, locales, t } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
 
+/** Pre-builds this route for every language and every record it has. */
 export async function generateStaticParams() {
   const list = await getLocations();
   return locales.flatMap((lang) => list.map((l) => ({ lang, slug: l.slug })));
 }
 
+/** Title, description, canonical and hreflang for this page, built through pageMetadata() so every page is consistent. */
 export async function generateMetadata({ params }: PageProps<"/[lang]/locations/[slug]">): Promise<Metadata> {
   const { lang, slug } = await params;
   if (!isLocale(lang)) return {};
@@ -27,6 +29,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/locations/
   });
 }
 
+/** One clinic's page. Placeholder body until the location chunk. */
 export default async function LocationPage({ params }: PageProps<"/[lang]/locations/[slug]">) {
   const { lang, slug } = await params;
   if (!isLocale(lang)) notFound();

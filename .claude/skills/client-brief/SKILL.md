@@ -6,9 +6,9 @@ description: Produce a review document for Dr. Khurshid (a PDF to Desktop/Pegasu
 
 Argument: what the brief is about, e.g. `/client-brief Services page`.
 
-Dr. Khurshid is a visual learner who reads on his phone and forwards things. Every brief follows the same shape so he always knows where to look. The generator for the last one is the reference: `scratchpad/pdf2/build.py` pattern (HTML → Playwright → A4 PDF, Lora headings, Montserrat text, brand colours).
+Dr. Khurshid is a visual learner who reads on his phone and forwards things. Every brief follows the same shape so he always knows where to look. The pattern is HTML → Playwright → A4 PDF (Lora headings, Montserrat text, brand colours); build the HTML from the pieces below and print it with Playwright's `page.pdf()`, A4, 16 mm margins, a footer with the notice and page numbers.
 
-1. **Gather before laying out.** Render what is being shown: canvas boards through `render/shim.py`, or the working build through `scripts/smoke.mjs` screenshots at 1440 and 390. Slice tall renders at section boundaries, never mid-text. Read `docs/client-facts-2026-10-04.md` for the have/need tables.
+1. **Gather before laying out.** Render what is being shown: the working build through `scripts/smoke.mjs` screenshots at 1440 and 390 (in `.smoke/`), or the design exports in `design/reference/`. Slice tall renders at section boundaries, never mid-text. Read `docs/client-facts-2026-10-04.md` for the have/need tables.
 2. **Pages, in this order.**
    - Cover: title, "Design preview for review" or the equivalent, prepared for / by, version and date, one-line status ("Nothing here is final or published").
    - Page 2, "Before you look": two dark notice boxes. *The photographs are not Pegasus* (stock stand-ins, replaced before launch, consented clinic photos). *The words are placeholders* (drafts, names in brackets are fictional, nothing decided, reviewed with him before use). Then "what we would like from you at this stage" (reactions, not wording) and "what is already true" (only client-facts).

@@ -24,6 +24,7 @@ Run with the `launch-checklist` skill. Nothing is ticked without evidence in the
 | B3 | Provider profiles: each published with an approval record; credentials as granted; no superlatives. | Client + Kachi | |
 | B4 | Emergency line present wherever clinic details appear; privacy contact on the Privacy page; Health811 line decided. | Kachi | |
 | B5 | French and Portuguese native review complete for every enabled language, reviewers named, "native review pending" markers removed. | Reviewers | |
+| B6 | Site settings → Languages enabled set for production per A3 (sample data has all three on for previews). | Kachi | |
 
 ## C. Photographs
 
@@ -38,16 +39,16 @@ Shot list: a doctor with a patient (staff stand-in), unposed, landscape, space o
 
 | # | Item | Owner | Evidence |
 | --- | --- | --- | --- |
-| D1 | Vercel project linked to the GitHub repo; production from `main`; preview deployments for PRs with `SHOW_DRAFTS=true`; production env has `NEXT_PUBLIC_SITE_URL` = canonical origin, `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `FORM_ENDPOINT`, `NEXT_PUBLIC_GA4_ID`, `SANITY_REVALIDATE_SECRET`. | Kachi | |
+| D1 | Vercel project linked to the GitHub repo; production from `main`; preview deployments for PRs with `SHOW_DRAFTS=true`; production build command `npm run check:production && npm run build`; production env has `NEXT_PUBLIC_SITE_URL` = canonical origin, `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `FORM_ENDPOINT`, `NEXT_PUBLIC_GA4_ID`, `SANITY_REVALIDATE_SECRET` (the last three are not read by any code until their chunks land). | Kachi | |
 | D2 | Domain added in Vercel; DNS at the registrar; HTTPS issued; every secondary domain redirects (308) to the canonical origin, path preserved. `curl -I` each. | Kachi | |
 | D3 | Old URLs (A2) redirect to the matching new pages in `next.config.ts` `redirects()`. | Kachi | |
 | D4 | Security headers live (`curl -I`): CSP (extended for GTM/GA4, the booking vendor, map embed), HSTS, X-Frame-Options, Referrer-Policy, Permissions-Policy. | Kachi | |
 | D5 | `robots.txt` allows crawling on production and disallows on previews; `sitemap.xml` lists every page in every enabled language with hreflang; unknown URLs return 404 (check the HTTP status on Vercel, not only the `noindex` meta). | Kachi | |
 | D6 | Structured data validated (Google Rich Results test): MedicalClinic with the right name, phone, address, hours, `alternateName` if A8 is yes. | Kachi | |
-| D7 | Sanity: schema matches `docs/content-model-v1.md`; two roles set up; Studio structure hides Site settings from Editors; publish webhook → Vercel deploy hook or revalidate route with `SANITY_REVALIDATE_SECRET`; a test publish rebuilds the site within two minutes. | Kachi | |
+| D7 | Sanity (not wired yet; the Sanity chunk): schema matches `docs/content-model-v1.md`; two roles set up; Studio structure hides Site settings from Editors; publish webhook → Vercel deploy hook or a revalidate route with `SANITY_REVALIDATE_SECRET`; a test publish rebuilds the site within two minutes. | Kachi | |
 | D8 | Form: a test submission from the live site arrives in the clinic inbox with name, phone and preferred day only; spam protection on; the thank-you page says what happens next. | Kachi + Client | |
 | D9 | Analytics: a page view and a Book click appear in GA4 with no PII in any parameter; Search Console verified; sitemap submitted. | Kachi | |
-| D10 | `qa-verifier` run against the production URL: lint/typecheck/build/check/smoke green; axe zero serious/critical; Lighthouse mobile ≥ 90 performance and 100 accessibility on the homepage and one service page. | Kachi | |
+| D10 | `qa-verifier` run against the production URL: lint/typecheck/build/check/smoke green; axe zero serious/critical; Lighthouse mobile ≥ 90 performance and 100 accessibility on the homepage and one service page, run by hand in Chrome DevTools (no script for it). | Kachi | |
 | D11 | Phone call from the site's number reaches the clinic; booking link lands where expected on a phone; every language switch keeps the same page. | Kachi | |
 
 ## E. The rebrand and listings

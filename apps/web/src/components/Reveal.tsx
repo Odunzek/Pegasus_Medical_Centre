@@ -1,5 +1,7 @@
 "use client";
 
+/** Wrapper that rises its children into view once when they scroll in. */
+
 import { useEffect, useRef, type ReactNode } from "react";
 
 /**

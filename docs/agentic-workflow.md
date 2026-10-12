@@ -63,7 +63,7 @@ In `.claude/skills/`:
 - **Hooks** (`.claude/hooks/`, Node, no extra tools): lint the file just edited; block any read or edit of `.env*` except `.env.example`; refuse to finish a turn while `apps/web/src` changed and the typecheck fails.
 - **`npm run check`** (`scripts/check-facts.mjs`): fails on a hard-coded phone, address, postal code or unit outside sample content; a temporary photo referenced outside sample content; the word "Center". With `CHECK_PRODUCTION=1`, fails on any temporary photo at all.
 - **`npm run smoke`** (`scripts/smoke.mjs`): starts the built app, visits every route in the sitemap at 390, 1024 and 1440 in every enabled language, runs axe (zero serious or critical), checks console errors, horizontal scroll, one h1, shell links resolving, the Book handover; writes screenshots to `.smoke/`.
-- **CI** (`.github/workflows/ci.yml`): lint → typecheck → check → `npm audit` → build → smoke, with screenshots uploaded. PR template, CODEOWNERS (Kempyre merges), Dependabot.
+- **CI** (`.github/workflows/ci.yml`): lint → typecheck → check → `npm audit` (advisory only) → build → smoke, with screenshots uploaded. PR template, CODEOWNERS (Kempyre merges), Dependabot.
 - **Permissions** (`.claude/settings.json`): force-push, `rm -rf`, production deploys and `.env` reads denied.
 
 ## 7. How a change moves
@@ -89,12 +89,12 @@ Sessions that cannot push (this is true of some cloud sessions) hand the commit 
 
 ## 9. Where the build stands (10 October 2026)
 
-Done, on branch `feat/foundation` (three commits; PR to open):
+Done, on branch `feat/foundation` (pushed; pull request to open against `main`):
 - Design tokens, fonts, logo files (brand package v1.4, "Centre"), the shell (header with Book handover, footer for all locations, phone bar, announcement bar, notices), actions, open-now, content layer with sample data, SEO plumbing (metadata, hreflang, JSON-LD, sitemap, robots), security headers, stub routes so nothing 404s, a general-page template, the foundation homepage.
 - All docs, agents, skills, hooks, gates and CI above. Lint, typecheck, check, build and smoke all pass.
 - A homepage design preview PDF (v1.0) delivered to the client.
 
-Next, in order (one branch and PR each, `/new-page`):
+Next, in order (one branch and PR each, `/new-page`; these are the "chunks" the code comments refer to):
 1. Content map (`/content-map`), then the client's answers to the blockers (services live, providers, booking, hours mismatch, enquiry inbox).
 2. Homepage proper (the editorial Homepage C from the canvas).
 3. Services index and Service page. 4. Location page. 5. Our doctors and profile (needs one published provider for the dynamic route). 6. Resources and general pages. 7. Contact and the form. 8. French and Portuguese pass with native review. 9. Sanity: schema from the model, `index.ts` rewritten to query it, publish webhook. 10. Launch checklist; then the monthly routine.

@@ -16,6 +16,7 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
+      // 'unsafe-inline' is needed for Next's own bootstrap script and the JSON-LD block; no third-party scripts yet
       "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob:",
@@ -30,7 +31,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Cache Components: pages are prerendered as static HTML at build time and must not read
+  // the clock or request data outside <Suspense>. Env vars are therefore baked in at build.
   cacheComponents: true,
+  // Partial prefetching: links prefetch only the static shell, so navigation feels instant.
   partialPrefetching: true,
   poweredByHeader: false,
   async headers() {

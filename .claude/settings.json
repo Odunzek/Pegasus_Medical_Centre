@@ -7,7 +7,6 @@
       "Bash(npm run build*)",
       "Bash(npm run smoke*)",
       "Bash(npm run dev*)",
-      "Bash(npm test*)",
       "Bash(git status*)",
       "Bash(git diff*)",
       "Bash(git log*)",
@@ -35,18 +34,33 @@
     "PostToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit",
-        "hooks": [{ "type": "command", "command": "node .claude/hooks/lint-edited.mjs" }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/lint-edited.mjs"
+          }
+        ]
       }
     ],
     "PreToolUse": [
       {
         "matcher": "Read|Edit|Write",
-        "hooks": [{ "type": "command", "command": "node .claude/hooks/env-guard.mjs" }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/env-guard.mjs"
+          }
+        ]
       }
     ],
     "Stop": [
       {
-        "hooks": [{ "type": "command", "command": "node .claude/hooks/typecheck-on-stop.mjs" }]
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/typecheck-on-stop.mjs"
+          }
+        ]
       }
     ]
   }

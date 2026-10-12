@@ -1,7 +1,29 @@
 "use client";
 
+/** Hook that says whether the hero's Book action has scrolled away, shared by the header and the phone bar. */
+
 import { useCallback, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
+
+/**
+ * How far below the top the hero's Book must scroll before it counts as gone. A little less
+ * than the desktop header height (88px) so the header's Book appears just as the hero's hides.
+ */
+const HANDOVER_MARGIN_PX = 80;
+
+/**
+ * One shared store, not one per caller: the header's Book and the phone bar must always
+ * agree, so they read the same value.
+ */
+const store = {
+  value: false,
+  set(v: boolean) {
+    store.value = v;
+  },
+  get() {
+    return store.value;
+  },
+};
 
 /**
  * True once the page's hero Book action (an element with `data-hero-book`) has
@@ -29,7 +51,7 @@ export function useHeroBookGone(): boolean {
           store.set(!entry.isIntersecting && entry.boundingClientRect.top < 0);
           onChange();
         },
-        { rootMargin: "-80px 0px 0px 0px", threshold: 0 },
+        { rootMargin: `-${HANDOVER_MARGIN_PX}px 0px 0px 0px`, threshold: 0 },
       );
       observer.observe(target);
       return () => observer.disconnect();
@@ -41,13 +63,3 @@ export function useHeroBookGone(): boolean {
 
   return useSyncExternalStore(subscribe, store.get, () => false);
 }
-
-const store = {
-  value: false,
-  set(v: boolean) {
-    store.value = v;
-  },
-  get() {
-    return store.value;
-  },
-};

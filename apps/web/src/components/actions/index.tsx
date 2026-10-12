@@ -5,16 +5,20 @@ import type { ReactNode } from "react";
 import { Icon, type IconName } from "@/components/Icon";
 import styles from "./actions.module.css";
 
+/** True for links that leave the site or open the phone app; those use a plain <a>, not Next's Link. */
 function isExternal(href: string) {
   return /^(https?:|tel:|mailto:)/.test(href);
 }
 
+/** Arrow size inside the 64px filled circle and the 48px outlined one, with a line weight that matches each. */
+const ARROW = { filled: { size: 26, strokeWidth: 3.4 }, outlined: { size: 22, strokeWidth: 3.2 } } as const;
+
 /** The circle on its own, for rows and tiles that are links themselves. */
 export function CircleArrow({ filled = false, icon = "arrow" }: { filled?: boolean; icon?: IconName }) {
-  const size = filled ? 26 : 22;
+  const arrow = filled ? ARROW.filled : ARROW.outlined;
   return (
     <span className={`${styles.circle} ${filled ? styles.filled : styles.outlined}`} aria-hidden="true">
-      <Icon name={icon} size={size} strokeWidth={filled ? 3.4 : 3.2} />
+      <Icon name={icon} size={arrow.size} strokeWidth={arrow.strokeWidth} />
     </span>
   );
 }
@@ -77,6 +81,3 @@ export function ArrowLink({ href, children, icon = "arrow", className, rel, targ
     </Link>
   );
 }
-
-/** Class for a whole-row link (a service row, a quick-action tile) whose circle should respond to hover. */
-export const rowHoverClass = styles.rowHover;

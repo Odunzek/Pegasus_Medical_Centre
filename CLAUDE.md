@@ -8,10 +8,10 @@ Public website for Pegasus Medical Centre, a family medicine and walk-in clinic 
 
 ## Where things live
 
-- `apps/web` — Next.js site (App Router, TypeScript, `src/` dir, no Tailwind). **Next.js here is newer than your training data**: the rules below are imported from the app and point at version-matched docs in `apps/web/node_modules/next/dist/docs/`. Use the `next-dev-loop` skill when running or debugging the dev server.
+- `apps/web` — Next.js site (App Router, TypeScript, `src/` dir, no Tailwind). **Next.js here is newer than your training data**: the rules below are imported from the app and point at version-matched docs in `node_modules/next/dist/docs/` at the repository root (npm hoists the workspace's packages there). Use the `next-dev-loop` skill when running or debugging the dev server.
 
 @apps/web/AGENTS.md
-  - `src/app/[lang]/` — every page; `params.lang` is `en`, `fr` or `pt`. Every language is prefixed (`/en/services`, `/fr/services`, `/pt/services`); `src/proxy.ts` redirects un-prefixed paths to English (a root-English rewrite was tried and dropped because client prefetching cannot see server rewrites). Never add a page outside `[lang]`. `src/app/sitemap.ts` and `robots.ts` are the only files beside it.
+  - `src/app/[lang]/` — every page; `params.lang` is `en`, `fr` or `pt`. Every language is prefixed (`/en/services`, `/fr/services`, `/pt/services`); `src/proxy.ts` redirects un-prefixed paths to English (a root-English rewrite was tried and dropped because client prefetching cannot see server rewrites). Never add a page outside `[lang]`; the only other files in `src/app/` are `sitemap.ts`, `robots.ts`, `fonts.ts`, `globals.css` and the icons.
   - `src/content/index.ts` — the only place pages read content from (today typed sample data in `src/content/sample/`, later Sanity). `src/content/types.ts` mirrors the content model field for field. `showDrafts` (env `SHOW_DRAFTS=true`) is the preview gate.
   - `src/components/` — the shell: `SiteHeader` (Book handover), `SiteFooter` (all locations), `PhoneBar`, `AnnouncementBar`, `Notices` (partly-English note, Draft mark, Temporary photo badge), `ComingSoon`, `actions` (`PrimaryAction`, `ArrowLink`, `CircleArrow`), `Reveal`, `OpenStatus`, `Icon`, `Logo`.
   - `src/lib/` — `i18n.ts` (locales, shell dictionary, `localePath`, `t`, `isTranslated`), `hours.ts` (open-now in Toronto time, hours wording), `booking.ts` (Book → booking URL or "Call to book"), `seo.ts` (`pageMetadata`, JSON-LD).
@@ -21,7 +21,7 @@ Public website for Pegasus Medical Centre, a family medicine and walk-in clinic 
 - `docs/content-model-v1.md` — the content model (v1.1). The Sanity schema must match it; change the document first, then `types.ts`, then the schema, then pages.
 - `docs/client-facts-2026-10-04.md` — confirmed facts about the clinic and the rebrand. The only source for real-world facts. Anything not in it is a placeholder in square brackets.
 - `docs/voice-and-content-guide.md` — how the site speaks in all three languages and what it may never say. Every word a patient reads follows it.
-- `docs/content-map.md` — the page-by-page content and search plan (built with the `content-map` skill).
+- `docs/content-map.md` — the page-by-page content and search plan. Not written yet; the `content-map` skill creates it.
 - `docs/agentic-workflow.md` — how this project is built with Claude: principles, roster, gates, decisions, status; read it when picking the project up.
 - `docs/launch-checklist.md`, `docs/maintenance.md` — launch and the monthly retainer. `docs/architecture/index.html` — the client-facing diagram.
 - `design/tokens.json`, `design/README.md` — the design system (v3, direction C). They agree with `globals.css`; if not, the CSS is wrong.
@@ -47,6 +47,8 @@ The site is a set of **templates fed by a headless CMS**. Read `docs/content-mod
 - **Every file is readable by a person who did not write it.** Each file opens with a short comment (two to six lines) saying what it is for and how it fits. Every exported function, component and type carries a one-to-three line plain-English comment: what it does, what it expects, anything surprising. Inside functions, comment the *why* (a decision, a constraint, a trade-off, a workaround and what it works around), never the *what* the code already says. A comment that explains a rule links the document the rule comes from. When code changes, its comments change in the same edit; a stale comment is a bug.
 - **Small, named, boring.** Prefer a named helper over a clever expression; prefer the pattern already in the codebase over a new one; prefer deleting code to adding a flag. One component per file; CSS Modules beside the component; no inline styles except one-off layout on placeholder pages.
 - **Plain English in identifiers**: `getPrimaryLocation`, `hoursSummary`, `telHref`, never abbreviations a receptionist would not guess.
+- **Escape hatches are explained.** A `@ts-expect-error`, an `eslint-disable`, a `!` non-null assertion or an `any` is allowed only with a one-line comment saying why it is safe; `Reveal.tsx` is the one example today.
+- For people reading this file: sentences that name a skill (`/new-page`) or an agent (`copywriter`, `qa-verifier`) describe the AI tooling in `.claude/`; the human equivalent is in `CONTRIBUTING.md`.
 
 ## Design rules (non-negotiable)
 
@@ -94,7 +96,7 @@ Reviewers are read-only and run on every page PR, in parallel, each answering on
 
 | Agent | Question |
 | --- | --- |
-| `architecture-reviewer` | Does it survive a second location and a CMS swap? One read path, no hard-coded facts, fields in the model, translated text. |
+| `architecture-reviewer` | Does it survive a second location and a CMS swap? One read path, no hard-coded facts, fields in the model, translated text. Also the Code rules: no magic values, comments present and true. |
 | `design-reviewer` | Does it match the canvas, `tokens.json` and the design rules? |
 | `a11y-reviewer` | Can an older patient on a phone use it? WCAG 2.2 AA. |
 | `content-reviewer` | Is every sentence true (or bracketed), allowed (CPSO/PHIPA), spelled Centre, in the voice, matched across languages? |
@@ -127,4 +129,4 @@ npm run studio              # Sanity Studio, once apps/studio exists
 
 ## Open decisions (keep current)
 
-Canonical domain and redirects (A1–A2) · booking system and link (4.2) · enquiry inbox and form service (1.3, A5) · analytics confirmation (A6) · hours mismatch, Sunday and holidays (A7) · whether the former name is shown (A8) · services live at launch (2.1–2.2) · provider profiles (3.x) · parking and accessibility (4.7–4.8) · fees and coverage publication (5.6) · privacy contact (7.4) · launch languages and native reviewers (A3). Tracked in `docs/client-facts-2026-10-04.md` and `docs/launch-checklist.md`.
+Numbers like 4.2 are questionnaire items (`docs/client-facts-2026-10-04.md`); letters like A5 are launch-checklist rows (`docs/launch-checklist.md`). Canonical domain and redirects (A1–A2) · booking system and link (4.2) · enquiry inbox and form service (1.3, A5) · analytics confirmation (A6) · hours mismatch, Sunday and holidays (A7) · whether the former name is shown (A8) · services live at launch (2.1–2.2) · provider profiles (3.x) · parking and accessibility (4.7–4.8) · fees and coverage publication (5.6) · privacy contact (7.4) · launch languages and native reviewers (A3).

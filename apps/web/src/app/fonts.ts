@@ -17,6 +17,7 @@ export const lora = localFont({
   ],
 });
 
+/** Montserrat, from the brand package: body text, menus, labels, secondary actions. */
 export const montserrat = localFont({
   variable: "--font-montserrat",
   display: "swap",

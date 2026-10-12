@@ -18,8 +18,11 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run check
+      # Advisory, not a gate: a transitive advisory with no fix available must not block every PR
       - run: npm audit --audit-level=high --omit=dev
         continue-on-error: true
+      # SHOW_DRAFTS makes the sample (all-draft) content visible so pages have something to render and
+      # the smoke test's link check passes; it also keeps robots.txt on "disallow" despite the origin being set.
       - run: npm run build
         env:
           NEXT_PUBLIC_SITE_URL: https://example.invalid

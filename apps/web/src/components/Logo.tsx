@@ -7,6 +7,9 @@ import Image from "next/image";
  * supplied SVGs with their print clear space cropped; never redraw or recolour).
  * `tone` picks the file for the background it sits on; `compact` is the narrow-screen cut.
  */
+/** The drawn area of each brand file (its viewBox after the print clear space was cropped), used to size the image without distortion. */
+const VIEWBOX = { wide: { w: 2820, h: 1000 }, compact: { w: 2070, h: 800 } };
+
 export function Logo({
   tone = "full-colour",
   compact = false,
@@ -20,7 +23,8 @@ export function Logo({
   priority?: boolean;
   className?: string;
 }) {
-  const ratio = compact ? 2070 / 800 : 2820 / 1000;
+  const box = compact ? VIEWBOX.compact : VIEWBOX.wide;
+  const ratio = box.w / box.h;
   const width = Math.round(height * ratio);
   const file = compact ? `pegasus-horizontal-compact-${tone}.svg` : `pegasus-horizontal-${tone}.svg`;
   return (

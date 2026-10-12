@@ -10,7 +10,7 @@ This page is for anyone working in this repository, with or without an AI assist
 
 ## Prerequisites
 
-Node 22 (`.nvmrc`), npm 10, Git. The repository's hooks are Node scripts, so Windows, macOS and Linux all work without extra tools. The smoke test needs Playwright's Chromium: `npx playwright install chromium` once.
+Node 22 (`.nvmrc`), npm 10, Git. The repository's hooks and scripts are Node, so Windows, macOS and Linux all work without extra tools. The smoke test needs Playwright's Chromium (about 150 MB, downloaded once with `npx playwright install chromium`) and a free port 3011.
 
 ## Setup
 
@@ -19,30 +19,32 @@ git clone https://github.com/Odunzek/Pegasus_Medical_Centre.git
 cd Pegasus_Medical_Centre
 npm install
 npx playwright install chromium
-npm run dev            # http://localhost:3000 → /en, /fr, /pt
+cp apps/web/.env.example apps/web/.env.local      # PowerShell: copy apps\web\.env.example apps\web\.env.local
+npm run typecheck                                 # once: generates Next's route types (.next/types) so your editor knows PageProps
+npm run dev                                       # http://localhost:3000 → /en, /fr, /pt
 ```
 
-Copy `apps/web/.env.example` to `apps/web/.env.local` and fill in values when you have them. Never commit `.env.local`. Until the clinic's Sanity account exists, pages run on typed sample data under `apps/web/src/content/sample/`; set `SHOW_DRAFTS=true` locally to see draft records.
+`.env.example` already sets `SHOW_DRAFTS=true`, and you want that locally: until the clinic approves content, every sample record is a draft, and without it the site is almost empty and the footer links 404. Never commit `.env.local`. Until the clinic's Sanity account exists, pages run on the typed sample data under `apps/web/src/content/sample/`.
 
 ## How changes get in
 
 1. Branch from `main`: `feat/service-page`, `fix/hours-table`, `docs/content-model`, `content/faq-answers`.
 2. One page template, one fix, or one content batch per branch. Keep pull requests small enough to review in ten minutes.
-3. Before opening the PR, run and pass:
+3. Before opening the PR, run and pass, in this order:
    ```
    npm run lint
    npm run typecheck
-   npm run check          # no hard-coded clinic facts outside sample content, no temporary photos in production paths, no "Center"
-   npm run build
-   npm run smoke          # screenshots + accessibility scan of the built site (writes .smoke/)
+   npm run check                      # no hard-coded clinic facts outside sample content, no temporary photos outside it, no "Center"
+   SHOW_DRAFTS=true npm run build     # PowerShell: $env:SHOW_DRAFTS="true"; npm run build
+   npm run smoke                      # tests the build you just made: every page, three widths, three languages, accessibility scan; ~5–8 min, writes .smoke/
    ```
-   and look at the page at 390 px and 1440 px wide.
+   A green smoke run ends with `smoke: ok` and `.smoke/report.txt` reads `ok`. Then look at the page yourself at 390 px and 1440 px wide.
 4. Open a pull request with the template filled in: what changed, which record types it reads, what happens when a second location is added, screenshots at both widths, anything you had to assume. CI runs the same checks; a red CI is not mergeable.
-5. Kempyre reviews and merges (`.github/CODEOWNERS`). `main` is always deployable; every PR gets a Vercel preview with drafts visible.
+5. Kempyre reviews and merges (`.github/CODEOWNERS`). `main` is always deployable. Once the Vercel project exists (launch checklist D1) every PR gets a preview link built with `SHOW_DRAFTS=true`, so drafts are visible and marked; production builds run `npm run check:production` first, which refuses any stock photograph.
 
 ## What reviewers check
 
-Six questions, whether the reviewer is a person or one of the agents in `.claude/agents/`:
+Seven questions, whether the reviewer is a person or one of the agents in `.claude/agents/` (the architecture reviewer also covers the code question):
 
 - **Architecture** (`CLAUDE.md` Architecture rules): content read only through `src/content/index.ts`; no hard-coded clinic facts; fields exist in the content model; nothing breaks when a second Location record appears; every patient-facing string is a translated field; computed values are computed.
 - **Code** (`CLAUDE.md` Code rules): nothing hard-coded (facts, strings, colours, sizes, URLs, magic numbers); every file opens with a short purpose comment and every exported function or component has a plain-English comment; comments say why, not what, and are updated with the code.

@@ -6,7 +6,8 @@
 
 import type { Metadata } from "next";
 import type { Location, SiteSettings } from "@/content/types";
-import { locationPhone } from "@/content";
+import { e164, locationPhone } from "@/content";
+import { WEEKDAY_NAMES } from "@/lib/hours";
 import { langTag, localePath, locales, t, type Locale } from "@/lib/i18n";
 
 /** Absolute site origin from NEXT_PUBLIC_SITE_URL, without a trailing slash. Undefined locally. */
@@ -52,8 +53,6 @@ export function pageMetadata(args: {
   };
 }
 
-const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
 /** schema.org MedicalClinic for one location, with opening hours, address and the former name during the rebrand. */
 export function clinicJsonLd(location: Location, settings: SiteSettings, locale: Locale) {
   const origin = siteOrigin() ?? "";
@@ -62,7 +61,7 @@ export function clinicJsonLd(location: Location, settings: SiteSettings, locale:
     .filter((d) => !d.closed && d.open && d.close && !d.tbc)
     .map((d) => ({
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: dayNames[d.day],
+      dayOfWeek: WEEKDAY_NAMES[d.day],
       opens: d.open,
       closes: d.close,
     }));
@@ -74,7 +73,7 @@ export function clinicJsonLd(location: Location, settings: SiteSettings, locale:
     name: settings.clinicName,
     ...(settings.formerName ? { alternateName: settings.formerName } : {}),
     url: `${origin}${localePath(locale, "/")}`,
-    telephone: `+${locationPhone(location, settings).replace(/\D/g, "").replace(/^(\d{10})$/, "1$1")}`,
+    telephone: e164(locationPhone(location, settings)),
     address: {
       "@type": "PostalAddress",
       streetAddress: [a.street, a.unit].filter(Boolean).join(", "),

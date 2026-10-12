@@ -6,10 +6,14 @@
  * app/[lang]/.
  */
 
+/** The site's languages, in the order the switcher shows them. */
 export const locales = ["en", "fr", "pt"] as const;
+/** One of the site's languages: "en", "fr" or "pt". */
 export type Locale = (typeof locales)[number];
+/** The language un-prefixed paths are redirected to. */
 export const defaultLocale: Locale = "en";
 
+/** True when a URL segment is one of the site's languages. */
 export function isLocale(value: string): value is Locale {
   return (locales as readonly string[]).includes(value);
 }
@@ -21,6 +25,7 @@ export const langTag: Record<Locale, string> = {
   pt: "pt-PT",
 };
 
+/** Each language's name in its own language, for the switcher. */
 export const languageName: Record<Locale, string> = {
   en: "English",
   fr: "Français",
@@ -49,6 +54,14 @@ export type Dictionary = {
   callClinic: string;
   bookOrCall: string;
   nav: { href: string; label: string }[];
+  /** Which nav items the footer's "Clinic" column repeats */
+  footerNav: string[];
+  /** The four general pages the footer links by convention; slugs match Page records */
+  footerPages: { href: string; label: string }[];
+  /** aria-label for the announcement bar region */
+  announcement: string;
+  /** Browser-tab titles for the index pages: "what and where". {place} is the neighbourhood or city. */
+  pageTitles: Record<string, string>;
   temporaryPhoto: string;
   draft: string;
   partlyEnglish: string;
@@ -59,12 +72,8 @@ export type Dictionary = {
     clinic: string;
     patients: string;
     languageHeading: string;
-    newPatients: string;
     questions: string;
     contact: string;
-    privacy: string;
-    accessibility: string;
-    terms: string;
     rights: string;
   };
   hours: {
@@ -77,6 +86,8 @@ export type Dictionary = {
     tbc: string;
     /** joins open and close: "9:00 a.m. to 6:00 p.m." */
     to: string;
+    /** joins the first and last day of a run: "Monday to Friday" */
+    dayRange: string;
     walkIn: string;
     closed: string;
     today: string;
@@ -111,12 +122,27 @@ const en: Dictionary = {
   bookOrCall: "Book or call",
   nav: [
     { href: "/services", label: "Services" },
-    { href: "/locations", label: "Locations" },
+    { href: "/locations", label: "Find us" },
     { href: "/doctors", label: "Our doctors" },
     { href: "/about", label: "About" },
     { href: "/resources", label: "Resources" },
     { href: "/contact", label: "Contact" },
   ],
+  footerNav: ["/services", "/locations", "/doctors", "/about"],
+  footerPages: [
+    { href: "/new-patients", label: "New patients" },
+    { href: "/privacy", label: "Privacy" },
+    { href: "/accessibility", label: "Accessibility" },
+    { href: "/terms", label: "Terms of use" },
+  ],
+  announcement: "Announcement",
+  pageTitles: {
+    "/services": "Services in {place}",
+    "/locations": "Find us in {place}",
+    "/doctors": "Our doctors in {place}",
+    "/resources": "Questions and answers",
+    "/contact": "Contact the clinic in {place}",
+  },
   temporaryPhoto: "Temporary photo",
   draft: "Draft",
   partlyEnglish: "Some of this page is not yet available in your language and is shown in English.",
@@ -132,12 +158,8 @@ const en: Dictionary = {
     clinic: "Clinic",
     patients: "Patients",
     languageHeading: "Language",
-    newPatients: "New patients",
     questions: "Questions and answers",
     contact: "Contact us",
-    privacy: "Privacy",
-    accessibility: "Accessibility",
-    terms: "Terms of use",
     rights: "All rights reserved.",
   },
   hours: {
@@ -148,6 +170,7 @@ const en: Dictionary = {
     opensOn: "opens {day} at {time}",
     tbc: "Today's hours are to be confirmed; please call before visiting",
     to: "{open} to {close}",
+    dayRange: "{from} to {to}",
     walkIn: "Walk-in",
     closed: "Closed",
     today: "Today",
@@ -173,12 +196,27 @@ const fr: Dictionary = {
   bookOrCall: "Rendez-vous ou appel",
   nav: [
     { href: "/services", label: "Services" },
-    { href: "/locations", label: "Adresses" },
+    { href: "/locations", label: "Nous trouver" },
     { href: "/doctors", label: "Nos médecins" },
     { href: "/about", label: "À propos" },
     { href: "/resources", label: "Ressources" },
     { href: "/contact", label: "Contact" },
   ],
+  footerNav: ["/services", "/locations", "/doctors", "/about"],
+  footerPages: [
+    { href: "/new-patients", label: "Nouveaux patients" },
+    { href: "/privacy", label: "Confidentialité" },
+    { href: "/accessibility", label: "Accessibilité" },
+    { href: "/terms", label: "Conditions d'utilisation" },
+  ],
+  announcement: "Annonce",
+  pageTitles: {
+    "/services": "Services à {place}",
+    "/locations": "Nous trouver à {place}",
+    "/doctors": "Nos médecins à {place}",
+    "/resources": "Questions et réponses",
+    "/contact": "Joindre la clinique à {place}",
+  },
   temporaryPhoto: "Photo temporaire",
   draft: "Brouillon",
   partlyEnglish: "Une partie de cette page n'est pas encore offerte dans votre langue et s'affiche en anglais.",
@@ -194,12 +232,8 @@ const fr: Dictionary = {
     clinic: "Clinique",
     patients: "Patients",
     languageHeading: "Langue",
-    newPatients: "Nouveaux patients",
     questions: "Questions et réponses",
     contact: "Nous joindre",
-    privacy: "Confidentialité",
-    accessibility: "Accessibilité",
-    terms: "Conditions d'utilisation",
     rights: "Tous droits réservés.",
   },
   hours: {
@@ -210,6 +244,7 @@ const fr: Dictionary = {
     opensOn: "ouvre {day} à {time}",
     tbc: "Les heures d'aujourd'hui restent à confirmer; appelez avant de venir",
     to: "{open} à {close}",
+    dayRange: "{from} au {to}",
     walkIn: "Sans rendez-vous",
     closed: "Fermé",
     today: "Aujourd'hui",
@@ -239,6 +274,21 @@ const pt: Dictionary = {
     { href: "/resources", label: "Recursos" },
     { href: "/contact", label: "Contacto" },
   ],
+  footerNav: ["/services", "/locations", "/doctors", "/about"],
+  footerPages: [
+    { href: "/new-patients", label: "Novos pacientes" },
+    { href: "/privacy", label: "Privacidade" },
+    { href: "/accessibility", label: "Acessibilidade" },
+    { href: "/terms", label: "Termos de utilização" },
+  ],
+  announcement: "Aviso",
+  pageTitles: {
+    "/services": "Serviços em {place}",
+    "/locations": "Onde estamos, em {place}",
+    "/doctors": "Os nossos médicos em {place}",
+    "/resources": "Perguntas e respostas",
+    "/contact": "Contactar a clínica em {place}",
+  },
   temporaryPhoto: "Fotografia temporária",
   draft: "Rascunho",
   partlyEnglish: "Parte desta página ainda não está disponível na sua língua e é apresentada em inglês.",
@@ -254,12 +304,8 @@ const pt: Dictionary = {
     clinic: "Clínica",
     patients: "Pacientes",
     languageHeading: "Idioma",
-    newPatients: "Novos pacientes",
     questions: "Perguntas e respostas",
     contact: "Contacte-nos",
-    privacy: "Privacidade",
-    accessibility: "Acessibilidade",
-    terms: "Termos de utilização",
     rights: "Todos os direitos reservados.",
   },
   hours: {
@@ -270,6 +316,7 @@ const pt: Dictionary = {
     opensOn: "abre {day} às {time}",
     tbc: "O horário de hoje ainda está por confirmar; ligue antes de vir",
     to: "{open} às {close}",
+    dayRange: "{from} a {to}",
     walkIn: "Sem marcação",
     closed: "Fechado",
     today: "Hoje",
@@ -280,6 +327,7 @@ const pt: Dictionary = {
 
 const dictionaries: Record<Locale, Dictionary> = { en, fr, pt };
 
+/** The shell strings (header, footer, hours wording...) for a language. */
 export function getDictionary(locale: Locale): Dictionary {
   return dictionaries[locale];
 }
@@ -289,9 +337,10 @@ export function fill(template: string, values: Record<string, string>): string {
   return template.replace(/\{(\w+)\}/g, (_, key: string) => values[key] ?? "");
 }
 
-/** Picks the right language from a translated field, falling back to English. */
+/** A patient-facing string in up to three languages; `en` is required and is the fallback. */
 export type Translated = { en: string; fr?: string; pt?: string };
 
+/** Picks the right language from a translated field, falling back to English. Use isTranslated() to know when it fell back. */
 export function t(field: Translated | undefined, locale: Locale): string {
   if (!field) return "";
   return field[locale] || field.en;

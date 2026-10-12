@@ -14,7 +14,8 @@
     "typecheck": "npm run typegen -w apps/web && tsc --noEmit -p apps/web/tsconfig.json",
     "studio": "npm run dev -w apps/studio",
     "check": "node scripts/check-facts.mjs",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "check:production": "node scripts/check-facts.mjs --production"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",

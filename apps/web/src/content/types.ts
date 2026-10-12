@@ -9,11 +9,13 @@
 
 import type { Translated } from "@/lib/i18n";
 
+/** Re-exported so content files only need to import from here. */
 export type { Translated };
 
 /** Every record that staff write passes through review before production shows it. */
 export type Review = "draft" | "approved";
 
+/** A picture with its alt text in every language. Width and height let the page reserve space before it loads. */
 export type ImageRef = {
   src: string;
   alt: Translated;
@@ -25,6 +27,7 @@ export type ImageRef = {
 
 /* ------------------------------------------------------------ 1. Site settings (single record) */
 
+/** The one global record: who the clinic is, how to reach it, what the shell shows, the homepage's words. */
 export type SiteSettings = {
   clinicName: string;
   legalName: string;
@@ -61,19 +64,23 @@ export type SiteSettings = {
 
 /* ------------------------------------------------------------ 2. Location */
 
-export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sunday, as in JavaScript Date
+/** Day of the week as JavaScript's Date counts it: 0 = Sunday … 6 = Saturday. */
+export type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
+/** One row of a clinic's regular week. Times are 24-hour strings in Toronto time. */
 export type DayHours = {
   day: Weekday;
   closed: boolean;
   open?: string; // "09:00", 24-hour, Toronto time
   close?: string; // "18:00"
-  walkInOpen?: string; // defaults to open
-  walkInClose?: string; // defaults to close
+  /** Walk-in window when it differs from the opening hours. Not rendered yet (v2); today walk-in = opening hours. */
+  walkInOpen?: string;
+  walkInClose?: string;
   /** Not yet confirmed by the clinic: rendered in square brackets; "Open now" does not guess on this day. */
   tbc?: boolean;
 };
 
+/** A date that differs from the regular week: a holiday closure or an early close. */
 export type HoursException = {
   date: string; // ISO date "2026-12-25"
   closed: boolean;
@@ -82,6 +89,7 @@ export type HoursException = {
   note?: Translated;
 };
 
+/** A clinic. There can be several; Location.services is the single source of truth for what each one offers. */
 export type Location = {
   slug: string;
   name: Translated;
@@ -119,6 +127,7 @@ export type Location = {
 
 /* ------------------------------------------------------------ 3. Service */
 
+/** How services are grouped on the Services index ("For you and your family", "For older adults"...). */
 export type ServiceGroup =
   | "family-medicine"
   | "walk-in"
@@ -130,6 +139,7 @@ export type ServiceGroup =
   | "allied-health"
   | "specialist";
 
+/** A service the clinic offers. Live ones get a page; planned ones appear only in the "coming later" line. */
 export type Service = {
   slug: string;
   name: Translated;
@@ -154,6 +164,7 @@ export type Service = {
 /** The fixed set of spoken languages; labels live in src/lib/i18n.ts. */
 export type SpokenLanguage = "en" | "fr" | "pt" | "es" | "it" | "ar" | "zh" | "hi" | "ur" | "tl" | "pa" | "ta" | "so" | "other";
 
+/** A doctor or nurse practitioner. Published only with status "published" AND an approval record. */
 export type Provider = {
   slug: string;
   fullName: string;
@@ -175,6 +186,10 @@ export type Provider = {
 
 /* ------------------------------------------------------------ 5. FAQ */
 
+/**
+ * A question and its answer. FAQs are keyed by `id`, not `slug`, because they have no page of
+ * their own: they appear inside other pages (homepage, Resources, a Service page).
+ */
 export type Faq = {
   id: string;
   question: Translated;
@@ -189,6 +204,7 @@ export type Faq = {
 
 /* ------------------------------------------------------------ 6. Page (general information) */
 
+/** The block types a general Page can be built from. A small fixed set keeps pages on-brand. */
 export type PageSection =
   | { type: "richText"; body: Translated }
   | { type: "image"; image: ImageRef; caption?: Translated }
@@ -197,6 +213,7 @@ export type PageSection =
   | { type: "faqGroup"; heading?: Translated; faqs: string[] }
   | { type: "cta"; heading: Translated; text?: Translated; action: "book" | "call" | "contact" };
 
+/** A general information page built from a small set of section blocks (About, New patients, Privacy...). */
 export type Page = {
   slug: string;
   title: Translated;
@@ -208,6 +225,7 @@ export type Page = {
 
 /* ------------------------------------------------------------ 7. Post */
 
+/** A notice (short, expires) or an article (longer). */
 export type Post = {
   slug: string;
   type: "notice" | "article";

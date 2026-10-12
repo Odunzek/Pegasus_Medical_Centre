@@ -1,19 +1,22 @@
 #!/usr/bin/env node
 /**
- * Build gate. Fails when:
- *  1. a clinic fact is hard-coded anywhere in apps/web/src outside src/content/sample
- *     (phone, street, postal code, hour strings), or in docs that patients could see;
+ * Build gate over apps/web/src (sample content excepted where noted). Fails when:
+ *  1. a clinic fact is hard-coded outside src/content/sample: the phone number, the street,
+ *     the postal code or the unit (facts live in records; see CLAUDE.md "Architecture rules");
  *  2. a temporary photo (public/temp-photos) is referenced outside src/content/sample;
- *  3. "Center" appears in patient-facing code or content (the brand is Centre).
- * Run with CHECK_PRODUCTION=1 to also fail on any `temporary: true` image at all
- * (used by the production build on Vercel).
+ *  3. the word "Center" appears anywhere in src (the brand is Centre), except where the
+ *     former name is deliberately carried (formerName / alternateName).
+ * With CHECK_PRODUCTION=1 (the production build command, `npm run check:production`) it also
+ * fails on any `temporary: true` image, so stock stand-ins can never reach the live site.
+ * Docs are not scanned; the content-reviewer agent and CONTRIBUTING cover those.
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = new URL("..", import.meta.url).pathname;
+const root = fileURLToPath(new URL("..", import.meta.url));
 const src = join(root, "apps/web/src");
-const production = process.env.CHECK_PRODUCTION === "1";
+const production = process.env.CHECK_PRODUCTION === "1" || process.argv.includes("--production");
 
 const facts = [
   { name: "phone number", re: /416[\s.-]?656[\s.-]?7272|\+?1?4166567272/ },

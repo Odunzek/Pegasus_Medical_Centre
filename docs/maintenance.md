@@ -12,7 +12,7 @@ Run as a scheduled task where possible; the report goes to the clinic the same d
 
 1. **Up and correct.** Homepage, one service page and the location page load in all enabled languages; "Open now" agrees with the hours in the Studio and on the Google Business Profile; the emergency line and phone are present.
 2. **Search.** Google Search Console: coverage errors, hreflang issues, manual actions, new 404s; Business Profile: hours, booking link, photos, any review needing a reply (replies never discuss a patient's care).
-3. **Speed and accessibility.** Lighthouse mobile on the homepage and one service page (performance ≥ 90, accessibility 100); the smoke test (`npm run smoke`) against production for console errors and axe violations.
+3. **Speed and accessibility.** Lighthouse mobile on the homepage and one service page, by hand in Chrome DevTools (performance ≥ 90, accessibility 100); the smoke test against production (`SMOKE_BASE_URL=https://<site> npm run smoke`) for console errors and axe violations.
 4. **Links.** The smoke test's link check; the booking link opens where expected; the form delivers a test submission to the clinic inbox with only name, phone and preferred day.
 5. **Dependencies.** Dependabot PRs reviewed and merged after CI; `npm audit` high/critical cleared; Next.js and Sanity release notes skimmed for security fixes.
 6. **Content hygiene.** Expired notices gone; no record still `review: draft` that the clinic meant to publish; no square brackets on production; any new provider approved before publishing.

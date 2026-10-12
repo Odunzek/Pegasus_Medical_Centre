@@ -1,6 +1,6 @@
 /** Placeholder body for routes whose template is not built yet, so shell links never 404 while the site is being built. */
 
-import { Icon } from "@/components/Icon";
+import { Icon, TEXT_ICON } from "@/components/Icon";
 import { getPrimaryLocation, getSiteSettings, locationPhone, telHref } from "@/content";
 import { getDictionary, type Locale } from "@/lib/i18n";
 
@@ -13,11 +13,11 @@ export async function ComingSoon({ locale, title }: { locale: Locale; title: str
   const [settings, location] = await Promise.all([getSiteSettings(), getPrimaryLocation()]);
   const phone = locationPhone(location, settings);
   return (
-    <section className="wrap section" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+    <section className="wrap section stack">
       <h1>{title}</h1>
       <p>{dict.comingSoon}</p>
-      <a href={telHref(phone)} style={{ display: "inline-flex", alignItems: "center", gap: 12, minHeight: 48, fontWeight: 600 }}>
-        <Icon name="phone" size={22} strokeWidth={3.5} />
+      <a href={telHref(phone)} className="phone-link">
+        <Icon name="phone" {...TEXT_ICON} />
         {phone}
       </a>
     </section>

@@ -13,6 +13,7 @@ import { clinicJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 import { lora, montserrat } from "../fonts";
 import "../globals.css";
 
+/** Pre-builds every language at deploy time. */
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
@@ -26,6 +27,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
   return { ...base, title: { default: settings.clinicName, template: `%s · ${settings.seo.titleSuffix}` } };
 }
 
+/** Wraps every page: sets the html lang, loads fonts, renders the shell around the page, and adds the clinic's structured data. */
 export default async function RootLayout({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();

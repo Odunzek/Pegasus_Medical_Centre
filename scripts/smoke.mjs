@@ -8,19 +8,45 @@
  */
 import { spawn } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 
-const port = 3011;
-const base = process.env.SMOKE_BASE_URL || `http://localhost:${port}`;
-const out = new URL("../.smoke/", import.meta.url).pathname;
+/** Port for the temporary `next start`; chosen away from 3000 so a running dev server is not disturbed. */
+const PORT = 3011;
+/** Set SMOKE_BASE_URL to test an already-running site (a Vercel preview, say) instead of starting one. */
+const base = process.env.SMOKE_BASE_URL || `http://localhost:${PORT}`;
+/** The three reference widths: phone (390), tablet (1024), desktop (1440). */
+const WIDTHS = [390, 1024, 1440];
+/** How far to scroll to be sure the hero's Book has left the screen. */
+const PAST_HERO_PX = 1200;
+/** Time for the reveal transition (700ms) to finish before axe measures contrast. */
+const REVEAL_SETTLE_MS = 800;
+const out = fileURLToPath(new URL("../.smoke/", import.meta.url));
 mkdirSync(out, { recursive: true });
 
-let server;
-if (!process.env.SMOKE_BASE_URL) {
-  server = spawn("npx", ["next", "start", "-p", String(port)], { cwd: new URL("../apps/web", import.meta.url).pathname, env: { ...process.env, NEXT_PUBLIC_SITE_URL: base, SHOW_DRAFTS: "true" }, stdio: "ignore", shell: process.platform === "win32" });
-  await new Promise((r) => setTimeout(r, 4000));
+/** Starts the built app and waits until it answers, instead of sleeping a fixed time. */
+async function startServer() {
+  const server = spawn("npx", ["next", "start", "-p", String(PORT)], {
+    cwd: fileURLToPath(new URL("../apps/web", import.meta.url)),
+    // The build already baked SHOW_DRAFTS and the origin in; these only matter for runtime routes (robots).
+    env: { ...process.env, NEXT_PUBLIC_SITE_URL: base, SHOW_DRAFTS: "true" },
+    stdio: "ignore",
+    shell: process.platform === "win32",
+  });
+  for (let i = 0; i < 60; i++) {
+    try {
+      const r = await fetch(`${base}/robots.txt`);
+      if (r.ok) return server;
+    } catch {}
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  server.kill();
+  throw new Error(`smoke: the site did not start on port ${PORT} within 30 s. Did you run the build first?`);
 }
+
+let server;
+if (!process.env.SMOKE_BASE_URL) server = await startServer();
 
 const failures = [];
 const note = (s) => failures.push(s);
@@ -37,7 +63,7 @@ try {
   const routes = await routesFromSitemap();
   if (routes.length === 0) note("sitemap lists no routes");
 
-  for (const width of [390, 1024, 1440]) {
+  for (const width of WIDTHS) {
     const context = await browser.newContext({ viewport: { width, height: width < 768 ? 844 : 900 }, isMobile: width < 768, hasTouch: width < 768 });
     for (const route of routes) {
       const page = await context.newPage();
@@ -55,7 +81,7 @@ try {
       }
       if (!res || res.status() >= 400) note(`${route} @${width}: HTTP ${res?.status()}`);
       await page.evaluate(() => document.querySelectorAll(".reveal").forEach((e) => e.classList.add("is-in")));
-      await page.waitForTimeout(800); // let the reveal transition finish before axe measures contrast
+      await page.waitForTimeout(REVEAL_SETTLE_MS);
       const hScroll = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
       if (hScroll) note(`${route} @${width}: horizontal scroll`);
       const h1s = await page.locator("h1").count();
@@ -83,9 +109,9 @@ try {
     const body = await r.text();
     if (r.status >= 400 || /name="robots" content="noindex"/.test(body)) note(`shell link ${href} does not resolve`);
   }
-  const bookSel = "header [class*='bookSlot'] a";
+  const bookSel = "[data-testid='header-book'] a";
   const bookAtTop = await page.locator(bookSel).count();
-  await page.evaluate(() => window.scrollTo(0, 1200));
+  await page.evaluate((y) => window.scrollTo(0, y), PAST_HERO_PX);
   await page.waitForTimeout(600);
   const bookAfter = await page.locator(bookSel).count();
   if (bookAtTop !== 0 || bookAfter !== 1) note(`Book handover: header Book count at top=${bookAtTop}, after scroll=${bookAfter} (expected 0 then 1)`);

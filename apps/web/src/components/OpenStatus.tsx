@@ -1,5 +1,7 @@
 "use client";
 
+/** The "Open now, until 6:00 p.m." line, computed in the browser in Toronto time. */
+
 import { useSyncExternalStore } from "react";
 import type { Location } from "@/content/types";
 import { describeStatus, openStatus } from "@/lib/hours";
@@ -24,8 +26,9 @@ export function OpenStatus({
   fallback?: string;
   className?: string;
 }) {
-  const minute = useSyncExternalStore(subscribeMinute, currentMinute, () => 0);
-  const text = minute === 0 ? "" : describeStatus(openStatus(location, new Date(minute * 60_000)), dict, locale);
+  const minute = useSyncExternalStore(subscribeMinute, currentMinute, () => SERVER_SNAPSHOT);
+  // On the server (and the first client paint) there is no clock, so the fallback hours line is shown instead
+  const text = minute === SERVER_SNAPSHOT ? "" : describeStatus(openStatus(location, new Date(minute * 60_000)), dict, locale);
   const shown = text || fallback || "";
   if (!shown) return null;
   return (
@@ -35,10 +38,15 @@ export function OpenStatus({
   );
 }
 
+/** What the server "sees" as the current minute: nothing. The real minute arrives once the browser runs. */
+const SERVER_SNAPSHOT = 0;
+
+/** The current minute since the epoch; the status is recomputed when it changes. */
 function currentMinute() {
   return Math.floor(Date.now() / 60_000);
 }
 
+/** Tells React to re-read the minute every 60 seconds. */
 function subscribeMinute(onChange: () => void) {
   const id = window.setInterval(onChange, 60_000);
   return () => window.clearInterval(id);

@@ -1,15 +1,18 @@
 "use client";
 
+/** The sticky site header: logo, main nav, language switch, the Book link that appears after the hero's Book, and the full-screen menu on narrow screens. */
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLink, CircleArrow, PrimaryAction } from "@/components/actions";
-import { Icon } from "@/components/Icon";
+import { Icon, TEXT_ICON } from "@/components/Icon";
 import { Logo } from "@/components/Logo";
 import { useHeroBookGone } from "@/components/useHeroBookGone";
 import { fill, langTag, languageName, localePath, locales, type Dictionary, type Locale } from "@/lib/i18n";
 import styles from "./SiteHeader.module.css";
 
+/** What the header needs from the layout: language, shell strings, which languages are on, the Book action and the phone. */
 export type SiteHeaderProps = {
   locale: Locale;
   dict: Dictionary;
@@ -32,7 +35,7 @@ export function SiteHeader({ locale, dict, clinicName, languagesEnabled, book, p
   const [open, setOpen] = useState(false);
 
   // Paths without the language prefix, so "current page" works in every language
-  const current = stripLocale(pathname, locale);
+  const current = stripLocale(pathname);
   const enabledLocales = locales.filter((l) => languagesEnabled[l]);
 
   useEffect(() => {
@@ -89,7 +92,7 @@ export function SiteHeader({ locale, dict, clinicName, languagesEnabled, book, p
 
         <div className={styles.right}>
           {langSwitch}
-          <div className={styles.bookSlot}>
+          <div className={styles.bookSlot} data-testid="header-book">
             {showBook ? (
               <ArrowLink href={book.href} className={`${styles.bookLink} rise`}>
                 {book.label}
@@ -104,7 +107,7 @@ export function SiteHeader({ locale, dict, clinicName, languagesEnabled, book, p
             aria-expanded={open}
             onClick={() => setOpen(true)}
           >
-            <Icon name="menu" size={22} strokeWidth={3.5} />
+            <Icon name="menu" {...TEXT_ICON} />
           </button>
         </div>
       </div>
@@ -116,7 +119,7 @@ export function SiteHeader({ locale, dict, clinicName, languagesEnabled, book, p
               <Logo tone="white" compact height={44} />
             </Link>
             <button type="button" className={styles.menuButton} style={{ display: "inline-flex" }} aria-label={dict.closeMenu} onClick={() => setOpen(false)}>
-              <Icon name="close" size={22} strokeWidth={3.5} />
+              <Icon name="close" {...TEXT_ICON} />
             </button>
           </div>
           <nav aria-label={dict.mainMenu}>
@@ -136,7 +139,7 @@ export function SiteHeader({ locale, dict, clinicName, languagesEnabled, book, p
               {book.label}
             </PrimaryAction>
             <a href={phone.href} className={styles.menuCall}>
-              <Icon name="phone" size={22} strokeWidth={3.5} />
+              <Icon name="phone" {...TEXT_ICON} />
               {dict.callClinic}: {phone.display}
             </a>
             <div className={styles.menuLangs} role="group" aria-label={dict.language}>
@@ -154,7 +157,7 @@ export function SiteHeader({ locale, dict, clinicName, languagesEnabled, book, p
 }
 
 /** The language-less path: /fr/services → /services. */
-function stripLocale(pathname: string, _locale: Locale): string {
+function stripLocale(pathname: string): string {
   for (const l of locales) {
     const prefix = `/${l}`;
     if (pathname === prefix) return "/";

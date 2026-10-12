@@ -1,9 +1,11 @@
 "use client";
 
+/** The announcement bar under the header, from Site settings; shown only while on and within its dates. */
+
 import { useSyncExternalStore } from "react";
 import type { SiteSettings } from "@/content/types";
 import { clinicClock } from "@/lib/hours";
-import { t, type Locale } from "@/lib/i18n";
+import { getDictionary, t, type Locale } from "@/lib/i18n";
 import styles from "./AnnouncementBar.module.css";
 
 /**
@@ -20,16 +22,18 @@ export function AnnouncementBar({ announcement, locale }: { announcement: SiteSe
 
   const text = t(announcement.text, locale);
   return (
-    <div className={styles.bar} role="region" aria-label="Announcement">
+    <div className={styles.bar} role="region" aria-label={getDictionary(locale).announcement}>
       <p className="wrap">{announcement.href ? <a href={announcement.href}>{text}</a> : text}</p>
     </div>
   );
 }
 
+/** Today's date in the clinic's time zone, "2026-10-09". */
 function torontoToday() {
   return clinicClock(new Date()).date;
 }
 
+/** Re-check once a minute so a bar that starts or ends today switches without a reload. */
 function subscribeDay(onChange: () => void) {
   const id = window.setInterval(onChange, 60_000);
   return () => window.clearInterval(id);

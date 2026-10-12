@@ -41,6 +41,10 @@ const paths: Record<IconName, string[]> = {
   clock: ["M24 7a17 17 0 1 0 0 34 17 17 0 0 0 0-34z", "M24 14v10l7 5"],
 };
 
+/** The icons available. Add a path set to `paths` and a name here together. */
+/** The size and stroke for an icon sitting beside text (phone, pin): 22px with a slightly heavier line reads at body size. */
+export const TEXT_ICON = { size: 22, strokeWidth: 3.5 } as const;
+
 export type IconName =
   | "home"
   | "about"
@@ -57,6 +61,7 @@ export type IconName =
   | "close"
   | "clock";
 
+/** One icon from the set, drawn in the current text colour. Decorative unless `label` is given. */
 export function Icon({
   name,
   size = 24,

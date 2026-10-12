@@ -8,8 +8,14 @@ import type { DayHours, HoursException, Location, Weekday } from "@/content/type
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { fill } from "@/lib/i18n";
 
+/** Every clinic is in Toronto; hours are always judged in this zone, whatever the visitor's clock says. */
 export const CLINIC_TIME_ZONE = "America/Toronto";
 
+/** English weekday names in Date order (0 = Sunday). schema.org and Intl both use English here; patient-facing names come from the dictionary. */
+export const WEEKDAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;
+const SHORT_WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/** A moment in the clinic's local time: the date, the weekday (0 = Sunday) and minutes since midnight. */
 export type LocalClock = { date: string; day: Weekday; minutes: number };
 
 /** The clinic's local date, weekday and minutes-since-midnight for an instant. */
@@ -25,8 +31,7 @@ export function clinicClock(now: Date, timeZone = CLINIC_TIME_ZONE): LocalClock 
     weekday: "short",
   }).formatToParts(now);
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
-  const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const day = weekdays.indexOf(get("weekday")) as Weekday;
+  const day = SHORT_WEEKDAYS.indexOf(get("weekday")) as Weekday;
   return {
     date: `${get("year")}-${get("month")}-${get("day")}`,
     day,
@@ -34,6 +39,7 @@ export function clinicClock(now: Date, timeZone = CLINIC_TIME_ZONE): LocalClock 
   };
 }
 
+/** "18:30" → 1110 (minutes since midnight), so times can be compared as numbers. */
 export function toMinutes(hhmm: string): number {
   const [h, m] = hhmm.split(":").map(Number);
   return h * 60 + (m || 0);
@@ -43,17 +49,20 @@ export function toMinutes(hhmm: string): number {
 export function formatTime(hhmm: string, locale: Locale): string {
   const [h, m] = hhmm.split(":").map(Number);
   const mm = String(m || 0).padStart(2, "0");
-  if (locale === "fr") return `${h} h ${mm}`;
+  // Canadian French writes "9 h" on the hour and "9 h 30" otherwise (voice guide, section 6)
+  if (locale === "fr") return mm === "00" ? `${h} h` : `${h} h ${mm}`;
   if (locale === "pt") return `${String(h).padStart(2, "0")}:${mm}`;
   const suffix = h < 12 ? "a.m." : "p.m.";
   const h12 = h % 12 === 0 ? 12 : h % 12;
   return `${h12}:${mm} ${suffix}`;
 }
 
+/** The hours that apply on one date, after exceptions are considered. */
 export type DaySchedule = { closed: boolean; open?: string; close?: string; note?: HoursException["note"]; tbc?: boolean };
 
 /** The effective hours for a calendar date: an exception if there is one, else the regular day. */
 export function scheduleFor(location: Pick<Location, "regularHours" | "hoursExceptions">, date: string, day: Weekday): DaySchedule {
+  // An exception is entered for a specific date, so it is never "to be confirmed"
   const exception = location.hoursExceptions.find((e) => e.date === date);
   if (exception) {
     return { closed: exception.closed, open: exception.open, close: exception.close, note: exception.note };
@@ -63,6 +72,7 @@ export function scheduleFor(location: Pick<Location, "regularHours" | "hoursExce
   return { closed: false, open: regular.open, close: regular.close, tbc: regular.tbc };
 }
 
+/** Whether the clinic is open at a moment, and when that changes. */
 export type OpenStatus =
   | { state: "open"; closesAt: string }
   | { state: "closed"; opensAt: string; opensDay: Weekday; opensToday: boolean }
@@ -70,6 +80,7 @@ export type OpenStatus =
   | { state: "tbc" }
   | { state: "unknown" };
 
+/** "2026-10-09" + 1 → "2026-10-10". Noon UTC is used so a daylight-saving change can never shift the date. */
 function addDays(date: string, n: number): string {
   const d = new Date(`${date}T12:00:00Z`);
   d.setUTCDate(d.getUTCDate() + n);
@@ -144,9 +155,8 @@ export function hoursSummary(location: Pick<Location, "regularHours">, dict: Dic
     if (last && last.text === text && order.indexOf(last.to) === order.indexOf(day) - 1) last.to = day;
     else groups.push({ from: day, to: day, text });
   }
-  const sep = locale === "en" ? " to " : locale === "fr" ? " au " : " a ";
   return groups
-    .map((g) => `${dict.hours.days[g.from]}${g.from === g.to ? "" : `${sep}${dict.hours.days[g.to]}`} ${g.text}`)
+    .map((g) => `${g.from === g.to ? dict.hours.days[g.from] : fill(dict.hours.dayRange, { from: dict.hours.days[g.from], to: dict.hours.days[g.to] })} ${g.text}`)
     .join(", ");
 }
 
@@ -160,7 +170,9 @@ export function hoursRows(location: Pick<Location, "regularHours">, dict: Dictio
       const text = dict.hours.closed;
       return { day, label, text: d?.tbc ? `[${text}]` : text, tbc: Boolean(d?.tbc) };
     }
-    const text = formatRange(d.open!, d.close!, dict, locale);
+    // The content model requires open and close on any row that is not closed; guard anyway
+    if (!d.open || !d.close) return { day, label, text: `[${dict.hours.closed}]`, tbc: true };
+    const text = formatRange(d.open, d.close, dict, locale);
     return { day, label, text: d.tbc ? `[${text}]` : text, tbc: Boolean(d.tbc) };
   });
 }

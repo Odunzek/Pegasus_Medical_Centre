@@ -57,7 +57,7 @@ The College of Physicians and Surgeons of Ontario (CPSO) regulates physician adv
 
 ## 6. French and Portuguese
 
-- French is **Canadian French (fr-CA)**: "courriel", "clinique sans rendez-vous", "carte Santé" (OHIP card), "médecin de famille", "prendre rendez-vous", "24 h" time style as "9 h à 18 h" (the site formats times; copy uses the same style). Formal **vous** throughout.
+- French is **Canadian French (fr-CA)**: "courriel", "clinique sans rendez-vous", "carte Santé" (OHIP card), "médecin de famille", "prendre rendez-vous", times as "9 h à 18 h" on the hour and "9 h 30" otherwise (the site formats them the same way). Formal **vous** throughout.
 - Portuguese is **European Portuguese (pt-PT)**, the variety of most Portuguese-speaking patients in this part of Toronto: "marcar consulta", "sem marcação", "cartão de saúde" (OHIP), "médico de família", "centro médico"; "você"-less formal register (third-person polite forms, "pode", "ligue-nos"). Times "9:00 às 18:00".
 - Translate meaning, not words. If a sentence does not work in the language, rewrite it; keep it as short as the English.
 - Keep the same facts, the same brackets and the same draft status as the English. Never add a fact in translation.
@@ -76,7 +76,7 @@ The College of Physicians and Surgeons of Ontario (CPSO) regulates physician adv
 | New patients | Nouveaux patients | Novos pacientes |
 | Opening hours | Heures d'ouverture | Horário de abertura |
 | Open now, until 6:00 p.m. | Ouvert, jusqu'à 18 h | Aberto, até às 18:00 |
-| Find us | Nous trouver | Onde estamos |
+| Find us (the page and the nav item; "Locations" is the record type, never the page name) | Nous trouver | Onde estamos |
 | Get directions | Itinéraire | Como chegar |
 | Services | Services | Serviços |
 | Our doctors | Nos médecins | Os nossos médicos |
