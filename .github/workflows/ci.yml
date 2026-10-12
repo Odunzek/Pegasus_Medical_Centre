@@ -17,8 +17,25 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - run: npm run check
+      # Advisory, not a gate: a transitive advisory with no fix available must not block every PR
+      - run: npm audit --audit-level=high --omit=dev
+        continue-on-error: true
+      # SHOW_DRAFTS makes the sample (all-draft) content visible so pages have something to render and
+      # the smoke test's link check passes; it also keeps robots.txt on "disallow" despite the origin being set.
       - run: npm run build
         env:
+          NEXT_PUBLIC_SITE_URL: https://example.invalid
+          SHOW_DRAFTS: "true"
           NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID }}
           NEXT_PUBLIC_SANITY_DATASET: production
-          NEXT_PUBLIC_SITE_URL: https://example.invalid
+      - run: npx playwright install --with-deps chromium
+      - run: npm run smoke
+        env:
+          SHOW_DRAFTS: "true"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: smoke-screenshots
+          path: .smoke/
+          retention-days: 14

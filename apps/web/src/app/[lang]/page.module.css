@@ -1,0 +1,131 @@
+/* Styles for the foundation homepage: full-bleed hero with the Deep Teal shade, the services list with rules, the welcome band. */
+
+.hero {
+  --focus: var(--focus-on-inverse);
+  position: relative;
+  min-height: 640px;
+  height: 76vh;
+  max-height: 820px;
+  overflow: hidden;
+  color: var(--white);
+  display: flex;
+  align-items: flex-end;
+}
+
+.heroPhoto {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  object-position: 60% 40%;
+}
+
+.heroShade {
+  position: absolute;
+  inset: 0;
+  background: var(--shade-hero);
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 128px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.heroInner h1 {
+  max-width: 14ch;
+}
+
+.heroRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px 48px;
+}
+
+.tel {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--tap);
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  text-decoration-color: var(--soft-green);
+}
+
+.tel:hover {
+  color: var(--white);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.status::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--soft-green);
+}
+
+.intro {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.introText {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.list {
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.list a {
+  text-decoration: none;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 500;
+}
+
+@media (max-width: 767px) {
+  .hero {
+    min-height: 560px;
+    height: 80vh;
+  }
+
+  .heroInner {
+    padding-bottom: 56px;
+    gap: 24px;
+  }
+
+  .intro {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
