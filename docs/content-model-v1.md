@@ -134,6 +134,16 @@ Used for: About, New patients, Fees & coverage, Privacy, Accessibility statement
 | About, New patients, Fees, Privacy… | Page |
 | Contact | Site settings + Locations; the form posts to the form service, not the CMS |
 
+### Three names for one thing
+
+Each page has a name in three layers, and only the outer one is meant to change. Rename the label freely; never rename the record type to match.
+
+| Layer | Examples | Who may change it |
+|---|---|---|
+| Record type (CMS schema, `types.ts`, `index.ts`) | `Provider`, `Location`, `Faq`, `Post` | Nobody once Sanity exists; this is the spine everything hangs on. |
+| URL path (`src/app/[lang]/…`) | `/doctors`, `/locations/[slug]`, `/resources` | Kempyre, before launch. After launch a rename needs a redirect in `next.config.ts` and a listings update. |
+| What patients see (menu label, page title, headings) | "Our doctors" / "Nos médecins" / "Os nossos médicos", "Find us", "Questions and answers", "Notices" | Anyone, any time: shell strings in `src/lib/i18n.ts`, page words in Site settings or the Page record. No code change. |
+
 "Open now, until 6:00 p.m." is computed on the site from regular hours + exceptions, in Toronto time, never typed by staff. Post expiry is also judged against the Toronto date.
 
 ## People and permissions (2 roles)
