@@ -41,7 +41,7 @@ export function SiteFooter({
       <div className={`wrap ${styles.inner}`}>
         <div className={styles.grid}>
           <div className={styles.brand}>
-            <Logo tone="white" height={70} />
+            <Logo tone="reversed-colour" height={70} />
             <p className={styles.tagline}>{t(settings.footerText, locale)}</p>
             {locations.map((location) => {
               const phone = locationPhone(location, settings);

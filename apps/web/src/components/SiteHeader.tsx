@@ -74,8 +74,8 @@ export function SiteHeader({ locale, dict, clinicName, languagesEnabled, book, p
     <header className={styles.header}>
       <div className={`wrap ${styles.bar}`}>
         <Link href={localePath(locale, "/")} className={styles.home} aria-label={homeLabel}>
-          <Logo tone="white" height={60} priority className={styles.logoWide} />
-          <Logo tone="white" compact height={44} priority className={styles.logoNarrow} />
+          <Logo tone="reversed-colour" height={60} priority className={styles.logoWide} />
+          <Logo tone="reversed-colour" compact height={44} priority className={styles.logoNarrow} />
         </Link>
 
         <nav aria-label={dict.mainMenu} className={styles.nav}>
@@ -116,7 +116,7 @@ export function SiteHeader({ locale, dict, clinicName, languagesEnabled, book, p
         <div className={`wrap ${styles.dialogInner}`}>
           <div className={styles.dialogTop}>
             <Link href={localePath(locale, "/")} aria-label={homeLabel} onClick={() => setOpen(false)}>
-              <Logo tone="white" compact height={44} />
+              <Logo tone="reversed-colour" compact height={44} />
             </Link>
             <button type="button" className={styles.menuButton} style={{ display: "inline-flex" }} aria-label={dict.closeMenu} onClick={() => setOpen(false)}>
               <Icon name="close" {...TEXT_ICON} />

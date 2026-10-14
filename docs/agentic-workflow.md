@@ -92,7 +92,7 @@ Sessions that cannot push (this is true of some cloud sessions) hand the commit 
 Done, on branch `feat/foundation` (pushed; pull request to open against `main`):
 - Design tokens, fonts, logo files (brand package v1.4, "Centre"), the shell (header with Book handover, footer for all locations, phone bar, announcement bar, notices), actions, open-now, content layer with sample data, SEO plumbing (metadata, hreflang, JSON-LD, sitemap, robots), security headers, stub routes so nothing 404s, a general-page template, the foundation homepage.
 - All docs, agents, skills, hooks, gates and CI above. Lint, typecheck, check, build and smoke all pass.
-- A homepage design preview PDF (v1.0) delivered to the client.
+- A homepage design preview PDF delivered to the client (current: v1.2, in `design/reference/`; earlier versions are superseded).
 
 Next, in order (one branch and PR each, `/new-page`; these are the "chunks" the code comments refer to):
 1. Content map (`/content-map`), then the client's answers to the blockers (services live, providers, booking, hours mismatch, enquiry inbox).
