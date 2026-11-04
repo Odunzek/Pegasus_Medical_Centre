@@ -9,13 +9,16 @@ Argument: the page or template name, e.g. `/new-page Service page`.
 1. **Read the contract first.**
    - The record type(s) this page reads, in `docs/content-model-v1.md` ("How the pages are fed" table). The page may only show fields that exist there. If it needs a field that does not exist, stop and propose the model change first.
    - `docs/client-facts-2026-10-04.md` for any real fact. Anything else is a placeholder in square brackets.
-   - `CLAUDE.md` design rules. Reuse existing components under `apps/web/src/components/` before writing new ones.
+   - `docs/voice-and-content-guide.md` for every word a patient reads; if the page needs new copy, ask the `copywriter` agent for it rather than writing it inline, then the `translator` for fr/pt.
+   - `CLAUDE.md` architecture rules and design rules. Reuse existing components under `apps/web/src/components/` before writing new ones.
+   - Ask: what happens to this page when a second Location record appears? If the answer is "it breaks" or "it needs code", change the plan.
 2. **Plan in writing** (five to ten lines): sections top to bottom, which record fields feed each, the one primary action, phone layout differences, what you will verify. Wait for approval if the page is new; proceed if it is a revision.
-3. **Build** in `apps/web/src/app/<route>/page.tsx` with typed sample data in `apps/web/src/content/sample/` shaped exactly like the content model, so swapping to Sanity queries later changes one import.
+3. **Build** in `apps/web/src/app/[lang]/<route>/page.tsx` (every page takes `params.lang`; every language is prefixed, `/en`, `/fr`, `/pt`; `/` redirects to `/en`, see `apps/web/src/proxy.ts`). Read content only through `apps/web/src/content/index.ts` (today: typed sample data in `src/content/sample/`, later Sanity), use `t(field, locale)` for translated text, the shell components in `src/components/` (`PrimaryAction`, `ArrowLink`, `CircleArrow`, `Reveal`, `OpenStatus`, `Icon`, `Logo`), and the CSS variables from `src/app/globals.css`. One `PrimaryAction` per screen; mark the hero's with `heroBook` so the header and phone bar take over after it scrolls away.
+   - Nothing hard-coded (facts, strings, colours, sizes, URLs, numbers); every file opens with a purpose comment and every export has a plain-English comment that says why, per CLAUDE.md "Code rules".
    - Desktop 1440 and phone 390 from the same markup; no separate mobile page.
    - Lora for h1–h3 and primary actions; Montserrat elsewhere; no rectangular buttons; circle-arrow pattern for actions; one primary action per screen.
    - Every image has alt text; every interactive element is a real `<a>` or `<button>` with a visible focus state; targets ≥ 44px; contrast ≥ 4.5:1.
    - Headings in order (h1 once), landmarks (`header`, `main`, `nav`, `footer`), `lang` on the html element.
-4. **Verify before saying done.** Run `npm run lint`, `npm run typecheck`, `npm run build`. Open the page at 390px and 1440px and look at it (Playwright screenshot or the browser). List what you checked and what you could not.
-5. **Review.** Ask the `design-reviewer` and `a11y-reviewer` subagents to review the diff. Fix real findings; ignore style preferences.
+4. **Verify before saying done.** Run `npm run lint`, `npm run typecheck`, `npm run check`, `npm run build`, `npm run smoke`. Open the page at 390px and 1440px and look at it. List what you checked and what you could not.
+5. **Review.** Ask the `architecture-reviewer`, `design-reviewer`, `a11y-reviewer`, `content-reviewer`, `seo-reviewer` and `privacy-security-reviewer` subagents to review the diff (all six, in parallel; they are read-only and independent). Fix real findings; ignore style preferences. A page is not done while any reviewer reports a violation. Then run `qa-verifier` for the evidence that goes in the PR.
 6. **Record.** If a decision was made that others need, add it to `docs/` in the same change. Commit on a branch and open a pull request with a short description and screenshots.

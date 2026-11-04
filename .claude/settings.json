@@ -3,9 +3,10 @@
     "allow": [
       "Bash(npm run lint*)",
       "Bash(npm run typecheck*)",
+      "Bash(npm run check*)",
       "Bash(npm run build*)",
+      "Bash(npm run smoke*)",
       "Bash(npm run dev*)",
-      "Bash(npm test*)",
       "Bash(git status*)",
       "Bash(git diff*)",
       "Bash(git log*)",
@@ -18,13 +19,15 @@
     ],
     "deny": [
       "Bash(git push --force*)",
+      "Bash(git push -f*)",
       "Bash(rm -rf*)",
-      "Read(./apps/web/.env.local)",
-      "Read(./**/.env)",
       "Bash(vercel --prod*)",
       "Bash(vercel deploy --prod*)",
-      "Bash(git push -f*)",
-      "Read(./**/.env*)"
+      "Read(./**/.env)",
+      "Read(./**/.env.local)",
+      "Read(./**/.env.*.local)",
+      "Read(./**/.env.production)",
+      "Read(./**/.env.development)"
     ]
   },
   "hooks": {
@@ -34,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.ts|*.tsx|*.js|*.jsx|*.mjs) cd \"$(git rev-parse --show-toplevel)\" && npx --no-install eslint --no-warn-ignored \"$f\" 2>&1 | tail -20 ;; esac; exit 0"
+            "command": "node .claude/hooks/lint-edited.mjs"
           }
         ]
       }
@@ -45,7 +48,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in *.env|*.env.local|*.env.production) echo 'Blocked: environment files are never read or edited by the agent.' >&2; exit 2;; esac; exit 0"
+            "command": "node .claude/hooks/env-guard.mjs"
           }
         ]
       }
@@ -55,14 +58,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"$(git rev-parse --show-toplevel)\" || exit 0; if git diff --quiet HEAD -- apps/web/src 2>/dev/null && [ -z \"$(git ls-files --others --exclude-standard apps/web/src)\" ]; then exit 0; fi; out=$(npm run -s typecheck 2>&1 | grep -v '^; if [ -n \"$out\" ]; then echo 'Typecheck failed. Fix before finishing:' >&2; echo \"$out\" >&2; exit 2; fi; exit 0"
-          }
-        ]
-      }
-    ]
-  }
-}
- | tail -15); if [ -n \"$out\" ]; then echo 'Typecheck failed. Fix before finishing:' >&2; echo \"$out\" >&2; exit 2; fi; exit 0"
+            "command": "node .claude/hooks/typecheck-on-stop.mjs"
           }
         ]
       }

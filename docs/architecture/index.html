@@ -6,6 +6,7 @@
 <title>Pegasus Website Architecture</title>
 </head>
 <body>
+<div style="background:#003d3a;color:#8fbc8f;font:600 14px/20px Montserrat,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:10px 16px">Working draft for review · architecture and content model v1.1 · nothing here is final or published</div>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Lora:wght@500&display=swap">
 <style>
 /* Layout: a single reading column with full-width figures; each figure makes one claim, text explains it in plain words for a non-technical reader. */
@@ -69,7 +70,7 @@ svg text{font-family:var(--sans);fill:currentColor}
 <section>
   <span class="eyebrow">1 · The big picture</span>
   <h2>Two systems, one website</h2>
-  <p>The website is made of two parts. A <strong>content back office</strong> where clinic staff type in hours, doctors, services and notices, and the <strong>public website</strong> that patients see. The website reads from the back office and rebuilds itself whenever something is published. Booking and enquiries deliberately happen outside both, so no patient information is ever stored in the website.</p>
+  <p>The website is made of two parts. A <strong>content back office</strong> where clinic staff type in hours, doctors, services and notices, and the <strong>public website</strong> that patients see. The website reads from the back office and rebuilds itself whenever something is published (a publish in the back office tells the hosting to rebuild; about a minute). Booking and enquiries deliberately happen outside both, so no patient information is ever stored in the website.</p>
   <figure>
     <div class="fig">
     <svg viewBox="0 0 1040 460" role="img" aria-label="Clinic staff publish content into the back office; the website rebuilds from it and serves patients; the Book button opens the clinic's own booking system; enquiries go to the clinic's email; analytics records clicks only.">
@@ -301,7 +302,7 @@ svg text{font-family:var(--sans);fill:currentColor}
       <path class="lnt" d="M510 120 H598" marker-end="url(#ar3t)"/>
       <rect class="box" x="600" y="40" width="420" height="60" rx="10"/>
       <text class="tb" x="620" y="64">Book an appointment</text>
-      <text class="ts" x="620" y="84">opens the clinic's booking system in a new tab; the website keeps nothing</text>
+      <text class="ts" x="620" y="84">opens the clinic's booking system; the website keeps nothing</text>
       <text class="ts" x="840" y="112" text-anchor="start">one link, changeable in the back office</text>
       <line class="ln" x1="510" y1="150" x2="598" y2="150" marker-end="url(#ar3)"/>
       <rect class="box" x="600" y="125" width="420" height="50" rx="10"/>

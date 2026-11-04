@@ -1,0 +1,132 @@
+/*
+  Actions. There are no rectangular buttons on this site.
+  Primary = Lora text + 64px soft-green filled circle with an arrow.
+  Secondary = Montserrat text + 48px outlined circle.
+*/
+
+.circle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+.circle svg {
+  transition: transform 200ms ease;
+}
+
+.filled {
+  width: var(--circle-primary);
+  height: var(--circle-primary);
+  background: var(--soft-green);
+  color: var(--deep-teal);
+}
+
+.outlined {
+  width: var(--circle-secondary);
+  height: var(--circle-secondary);
+  border: 2px solid var(--soft-green);
+  color: currentcolor;
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  min-height: var(--circle-primary);
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-primary-action);
+  line-height: 1.2;
+  text-decoration: none;
+  color: inherit;
+  letter-spacing: -0.01em;
+}
+
+.primary:hover {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 8px;
+  text-decoration-color: var(--soft-green);
+}
+
+.primary:hover .filled {
+  transform: scale(1.06);
+}
+
+.primary:hover .filled svg {
+  transform: translateX(3px);
+}
+
+/* On a photo or Deep Teal: the circle turns white on hover */
+.primaryLight:hover .filled {
+  background: var(--white);
+  color: var(--deep-teal);
+}
+
+/* On white or Pale Neutral: the circle turns Deep Teal on hover */
+.primaryInk:hover .filled {
+  background: var(--deep-teal);
+  color: var(--white);
+}
+
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-height: var(--circle-secondary);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 24px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.secondary:hover {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 6px;
+}
+
+.secondary:hover .outlined,
+.rowHover:hover .outlined {
+  background: var(--soft-green);
+  color: var(--deep-teal);
+}
+
+.secondary:hover .outlined svg,
+.rowHover:hover .outlined svg {
+  transform: translateX(3px);
+}
+
+.circleRight {
+  flex-direction: row;
+}
+
+.circleLeft {
+  flex-direction: row-reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circle,
+  .circle svg {
+    transition: none;
+  }
+
+  .primary:hover .filled {
+    transform: none;
+  }
+
+  .primary:hover .filled svg,
+  .secondary:hover .outlined svg,
+  .rowHover:hover .outlined svg {
+    transform: none;
+  }
+}
