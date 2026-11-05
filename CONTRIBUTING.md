@@ -6,7 +6,8 @@ This page is for anyone working in this repository, with or without an AI assist
 
 - Read `README.md`, then `CLAUDE.md` end to end. Then, depending on your task: `docs/content-model-v1.md` (any page or schema work), `docs/voice-and-content-guide.md` (any words a patient reads), `design/README.md` (any visual work).
 - Facts about the clinic come only from `docs/client-facts-2026-10-04.md`. Anything not confirmed there is written in square brackets, and records stay `review: "draft"` until the clinic approves them.
-- The approved design is on the Kempyre design canvas (link in `design/README.md`) and implemented in `apps/web/src/app/globals.css`.
+- The approved design is on the Kempyre design canvas (link in `design/README.md`) and implemented as Tailwind CSS v4 tokens in `apps/web/src/app/globals.css`.
+- Styling is Tailwind CSS: classes in the markup, using the project's tokens (`bg-deep-teal`, `text-body`, `px-gutter`). There are no CSS Modules and no `tailwind.config.js` (Tailwind v4 keeps its settings in `globals.css`). Read "Styling" under Code rules in `CLAUDE.md` before your first visual change. Nothing extra to install: `npm install` brings Tailwind with everything else.
 
 ## Prerequisites
 
@@ -47,7 +48,7 @@ npm run dev                                       # http://localhost:3000 → /e
 Seven questions, whether the reviewer is a person or one of the agents in `.claude/agents/` (the architecture reviewer also covers the code question):
 
 - **Architecture** (`CLAUDE.md` Architecture rules): content read only through `src/content/index.ts`; no hard-coded clinic facts; fields exist in the content model; nothing breaks when a second Location record appears; every patient-facing string is a translated field; computed values are computed.
-- **Code** (`CLAUDE.md` Code rules): nothing hard-coded (facts, strings, colours, sizes, URLs, magic numbers); every file opens with a short purpose comment and every exported function or component has a plain-English comment; comments say why, not what, and are updated with the code.
+- **Code** (`CLAUDE.md` Code rules): nothing hard-coded (facts, strings, colours, sizes, URLs, magic numbers); styling with Tailwind utilities from the project's tokens, no arbitrary values like `p-[37px]` and no CSS Modules; every file opens with a short purpose comment and every exported function or component has a plain-English comment; comments say why, not what, and are updated with the code.
 - **Design** (`design/tokens.json`, `design/README.md`): palette only, Lora for headings and primary actions, Montserrat elsewhere, no rectangular buttons, circle-arrow actions, one primary action per screen, spacing scale, motion with a reduced-motion fallback.
 - **Accessibility** (WCAG 2.2 AA): contrast ≥ 4.5:1, targets ≥ 44 px, visible focus, real `<a>`/`<button>`, alt text on every image, headings in order, keyboard order, no horizontal scroll on phones.
 - **Content** (`docs/voice-and-content-guide.md`): facts match client-facts or are bracketed; no testimonials, superlatives, guarantees or advice; Centre and Canadian spelling; the voice; French and Portuguese match the English and are marked for native review; emergency line present.

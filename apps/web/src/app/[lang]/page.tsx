@@ -14,7 +14,6 @@ import { bookAction } from "@/lib/booking";
 import { hoursSummary } from "@/lib/hours";
 import { anyFallback, getDictionary, isLocale, localePath, t } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
-import styles from "./page.module.css";
 
 /**
  * Foundation homepage: the shell (header handover, phone bar, actions, type,
@@ -22,6 +21,21 @@ import styles from "./page.module.css";
  * or from records; nothing is hard-coded. The full editorial homepage (design
  * canvas, Homepage C) replaces the layout in the next chunk.
  */
+
+/**
+ * The hero's height: three-quarters of the screen (a little more on phones) so the next
+ * section peeks in, between a floor and a ceiling so very short or tall screens still work.
+ */
+const HERO_HEIGHT = "h-[76vh] min-h-160 max-h-205 max-md:h-[80vh] max-md:min-h-140";
+
+/** Fills the hero with the photo; the 60% 40% focus point keeps the subject's face in frame as the photo crops. */
+const HERO_PHOTO_CROP = "object-cover object-[60%_40%]";
+
+/** The hero headline wraps at about fourteen characters so it sits in two or three balanced lines over the photo. */
+const HERO_HEADLINE_WIDTH = "max-w-[14ch]";
+
+/** Services intro beside the list: the words a little wider than the list on desktop, stacked on phones. */
+const INTRO_COLUMNS = "grid grid-cols-[1.1fr_1fr] items-start gap-16 max-md:grid-cols-1 max-md:gap-10";
 
 /** How many services the homepage lists before "All services". Six fits the two-column layout without scrolling on a laptop. */
 const HOMEPAGE_SERVICE_COUNT = 6;
@@ -59,42 +73,42 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
     <>
       <PartlyEnglishNote dict={dict} show={fellBack} />
 
-      <section className={styles.hero} aria-labelledby="hero-heading">
-        {hero ? <Image src={hero.src} alt="" fill priority sizes="100vw" className={styles.heroPhoto} /> : null}
-        <div className={styles.heroShade} aria-hidden="true" />
+      <section className={`focus-on-inverse relative flex items-end overflow-hidden text-white ${HERO_HEIGHT}`} aria-labelledby="hero-heading">
+        {hero ? <Image src={hero.src} alt="" fill priority sizes="100vw" className={HERO_PHOTO_CROP} /> : null}
+        <div className="absolute inset-0 bg-(image:--shade-hero)" aria-hidden="true" />
         {hero?.temporary ? <TemporaryPhotoBadge dict={dict} /> : null}
-        <div className={`wrap ${styles.heroInner}`}>
-          <h1 id="hero-heading" className="rise">
+        <div className="wrap relative z-1 flex flex-col gap-8 pb-32 max-md:gap-6 max-md:pb-14">
+          <h1 id="hero-heading" className={`rise ${HERO_HEADLINE_WIDTH}`}>
             {t(home.heroHeadline, locale)}
           </h1>
-          <p className="rise rise-1 intro-text">
+          <p className="rise rise-1 max-w-140 text-lead">
             {t(home.heroIntro, locale)}
           </p>
-          <div className={`${styles.heroRow} rise rise-2`}>
+          <div className="rise rise-2 flex flex-wrap items-center gap-x-12 gap-y-6">
             <PrimaryAction href={book.href} tone="light" heroBook>
               {book.label}
             </PrimaryAction>
-            <a href={telHref(phoneDisplay)} className={styles.tel}>
+            <a href={telHref(phoneDisplay)} className="inline-flex min-h-tap items-center gap-3 text-action/(--text-body--line-height) font-semibold text-white underline decoration-soft-green decoration-2 underline-offset-6 hover:text-white">
               <Icon name="phone" {...TEXT_ICON} />
               {phoneDisplay}
             </a>
-            <OpenStatus location={location} dict={dict} locale={locale} fallback={hoursSummary(location, dict, locale)} className={styles.status} />
+            <OpenStatus location={location} dict={dict} locale={locale} fallback={hoursSummary(location, dict, locale)} className="inline-flex items-center gap-2.5 text-ui/(--text-body--line-height) font-medium before:size-2.5 before:rounded-full before:bg-soft-green" />
           </div>
         </div>
       </section>
 
       <Reveal as="section" className="wrap section">
-        <div className={styles.intro}>
-          <div className={styles.introText}>
+        <div className={INTRO_COLUMNS}>
+          <div className="flex flex-col gap-6">
             <span className="label">{dict.nav.find((n) => n.href === "/services")?.label}</span>
             <h2>{t(home.servicesHeading, locale)}</h2>
             <p>{t(home.welcomeText, locale)}</p>
             <ArrowLink href={localePath(locale, "/services")}>{dict.nav.find((n) => n.href === "/services")?.label}</ArrowLink>
           </div>
-          <ul className={styles.list}>
+          <ul className="border-t border-border">
             {services.slice(0, HOMEPAGE_SERVICE_COUNT).map((s) => (
-              <li key={s.slug}>
-                <Link href={localePath(locale, `/services/${s.slug}`)}>
+              <li key={s.slug} className="flex items-center justify-between gap-6 border-b border-border py-5">
+                <Link href={localePath(locale, `/services/${s.slug}`)} className="text-row font-medium no-underline">
                   {t(s.name, locale)}
                   {showDrafts && s.review === "draft" ? <DraftMark dict={dict} /> : null}
                 </Link>

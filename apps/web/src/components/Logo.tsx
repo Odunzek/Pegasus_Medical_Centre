@@ -5,7 +5,9 @@ import Image from "next/image";
 /**
  * The horizontal logo, from the brand package v1.4 (files in public/brand are the
  * supplied SVGs with their print clear space cropped; never redraw or recolour).
- * `tone` picks the file for the background it sits on; `compact` is the narrow-screen cut.
+ * `tone` picks the file for the background it sits on: full-colour on white, reversed-colour
+ * on Deep Teal (the coloured version for dark grounds: green leaves, two-tone wordmark), and
+ * white only where a photo or a mid-tone needs a single-colour mark. `compact` is the narrow-screen cut.
  */
 /** The drawn area of each brand file (its viewBox after the print clear space was cropped), used to size the image without distortion. */
 const VIEWBOX = { wide: { w: 2820, h: 1000 }, compact: { w: 2070, h: 800 } };

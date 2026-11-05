@@ -24,7 +24,7 @@ Built and maintained by **Kempyre Groups**. Other people may contribute; everyth
                       own booking system)            → the clinic's inbox)
 ```
 
-- **Website:** Next.js 16 (App Router with Cache Components: pages are built as static HTML, so environment variables are baked in at build time), TypeScript, CSS Modules. No Tailwind. Lives in `apps/web`. The Sanity client packages are installed ahead of the Sanity stage and are not used yet.
+- **Website:** Next.js 16 (App Router with Cache Components: pages are built as static HTML, so environment variables are baked in at build time), TypeScript, Tailwind CSS v4 (the brand's design tokens live in `apps/web/src/app/globals.css`; there is no `tailwind.config.js`). Lives in `apps/web`. The Sanity client packages are installed ahead of the Sanity stage and are not used yet.
 - **Content:** Sanity. Not created yet; until then the site runs on typed sample data in `apps/web/src/content/sample/`. The seven kinds of content (Site settings, Location, Service, Provider, FAQ, Page, Post) are described in `docs/content-model-v1.md`.
 - **Hosting:** Vercel. Every pull request gets a preview link.
 - **No patient data anywhere.** Booking is a link out to the clinic's own system; the enquiry form sends three fields to the clinic's inbox; analytics counts page views and Book clicks only.
@@ -69,7 +69,7 @@ npm run smoke                     # every page, three languages, three widths, a
 | `apps/web/src/proxy.ts` | What other frameworks call middleware: sends `/services` to `/en/services`. |
 | `apps/web/src/components/` | The shell and shared pieces: header, footer, phone bar, actions, icons, notices. |
 | `apps/web/src/lib/` | Small libraries: languages (`i18n.ts`), opening hours (`hours.ts`), the Book action (`booking.ts`), search metadata (`seo.ts`). |
-| `apps/web/src/app/globals.css` | The design values as CSS variables (colours, type, spacing, radii). |
+| `apps/web/src/app/globals.css` | The design tokens for Tailwind (colours, type, spacing, radii) in its `@theme` block, plus the shared utilities (`wrap`, `section`, `label`, `stack`). |
 | `design/` | The design system in words (`README.md`) and numbers (`tokens.json`); `design/reference/` has pictures of the target homepage on desktop and phone, and the client preview PDF, for anyone without access to the design canvas. |
 | `docs/` | Everything decided: the content model, the clinic's confirmed facts, the voice guide, the launch checklist, the maintenance routine, and how the project is built with AI (`agentic-workflow.md`). |
 | `scripts/` | `check-facts.mjs` (`npm run check`; `npm run check:production` also refuses stock photos) and `smoke.mjs` (`npm run smoke`; writes `.smoke/`, which is regenerated each run and not committed). |
@@ -81,7 +81,7 @@ npm run smoke                     # every page, three languages, three widths, a
 Each of these has a longer form in `CLAUDE.md`.
 
 1. **Facts come from one place.** The clinic's address, phone, hours, services and doctors are *content records*, never typed into code or copy. Anything not yet confirmed by the clinic is written in square brackets, like `[Typical wait: to be confirmed]`, and every record is a draft until the clinic approves it.
-2. **Nothing is hard-coded.** Colours and sizes are CSS variables; text a patient reads is a translated field or a dictionary string; URLs and keys are environment variables.
+2. **Nothing is hard-coded.** Colours and sizes are Tailwind utilities made from the brand's tokens (no arbitrary values like `p-[37px]`); text a patient reads is a translated field or a dictionary string; URLs and keys are environment variables.
 3. **Built for more than one clinic**, even though one opens first. Never assume "the clinic".
 4. **The design has no rectangular buttons.** Actions are text with a circle arrow. Headlines are Lora, everything else Montserrat, five brand colours, nothing a patient reads under 16px.
 5. **Accessible for older patients**: WCAG 2.2 AA, 44px tap targets, visible focus, real links and buttons.
@@ -122,8 +122,8 @@ Every page follows the same shape. Take `apps/web/src/app/[lang]/services/[slug]
 3. **`generateStaticParams`** lists every language × every record, so the page is built as static HTML at deploy time.
 4. **`generateMetadata`** calls `pageMetadata({ locale, path, title, description, settings })`, which gives the page its title, description, canonical URL and the hreflang set. The title says *what and where*.
 5. **Translated text is rendered with `t(field, lang)`**; if any field falls back to English, the page shows `<PartlyEnglishNote>`. On preview builds, draft records get `<DraftMark>`.
-6. **It uses the shared pieces**: `PrimaryAction` for the one main action on the screen (`heroBook` on the hero's Book so the header and phone bar take over after it scrolls away), `ArrowLink` for secondary actions, `CircleArrow` on whole-row links, `Reveal` for the rise-in, `OpenStatus` for "Open now", `Icon` with `TEXT_ICON` beside text, the CSS variables from `globals.css`.
-7. **Styles go in a CSS Module** beside the page; no inline styles, no magic numbers.
+6. **It uses the shared pieces**: `PrimaryAction` for the one main action on the screen (`heroBook` on the hero's Book so the header and phone bar take over after it scrolls away), `ArrowLink` for secondary actions, `CircleArrow` on whole-row links, `Reveal` for the rise-in, `OpenStatus` for "Open now", `Icon` with `TEXT_ICON` beside text, Tailwind utilities from the tokens in `globals.css`.
+7. **Styles are Tailwind classes** in the page itself, using the project's tokens (`text-row`, `py-section`, `border-border`); long or repeated class lists go in a named constant with a comment; no inline styles, no arbitrary values.
 8. **It is done when**: lint, typecheck, check, build and smoke pass; it was looked at on a phone and a laptop; the seven reviewer questions in `CONTRIBUTING.md` have been answered (by a person or the agents); the PR template is filled in, including "what happens when a second clinic is added".
 
 The simplest full template today is `apps/web/src/app/[lang]/[page]/page.tsx` (general pages); the homepage `apps/web/src/app/[lang]/page.tsx` shows the hero and the one-Book rule.
@@ -135,7 +135,7 @@ The simplest full template today is `apps/web/src/app/[lang]/[page]/page.tsx` (g
 | Build a new page | `CONTRIBUTING.md`, then `apps/web/src/app/[lang]/[page]/page.tsx` as the simplest example and `apps/web/src/app/[lang]/page.tsx` as a fuller one |
 | Add a field to a kind of content | Change `docs/content-model-v1.md` first, then `apps/web/src/content/types.ts`, then the sample data, then pages |
 | Add a word patients will read | A translated field on a record, or a string in `apps/web/src/lib/i18n.ts` with its French and Portuguese |
-| Change a colour, size or spacing | `apps/web/src/app/globals.css` (and `design/tokens.json`, which must agree) |
+| Change a colour, size or spacing | The token in `@theme` in `apps/web/src/app/globals.css` (and `design/tokens.json`, which must agree); every utility using it follows |
 | Know what the clinic has confirmed | `docs/client-facts-2026-10-04.md` |
 | Write copy | `docs/voice-and-content-guide.md` |
 | See what reviewers will check | `CONTRIBUTING.md`, "What reviewers check" |

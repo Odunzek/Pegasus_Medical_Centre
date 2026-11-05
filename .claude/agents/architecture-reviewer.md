@@ -14,7 +14,7 @@ Report only concrete violations, each with file and line:
 - patient-readable text that is not a `Translated` field rendered with `t()`, or a page outside `app/[lang]/`;
 - values that should be computed (open/closed, expired notices, derived lists) being typed as content instead;
 - patient data stored, logged, or sent to analytics; secrets in code;
-- a magic number, colour, size, URL or key written inline instead of a CSS variable, named constant or environment variable;
+- a magic number, colour, size, URL or key written inline instead of a Tailwind token, named constant or environment variable; a Tailwind arbitrary value (`p-[37px]`, `text-[#123]`) that is not in a named, commented constant; a CSS Module or new stylesheet;
 - a new or changed file without an opening purpose comment, an exported function or component without a plain-English comment, or a comment that no longer matches the code (CLAUDE.md "Code rules").
 
 Do not comment on style, naming, or design (other reviewers cover that). If there are no violations, say so in one line.
