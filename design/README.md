@@ -1,6 +1,6 @@
 # Pegasus Medical Centre: website design system (v3, direction C)
 
-This is the design the website is built from, decided 9 October 2026 after the homepage options review. It replaces the v2 system (Montserrat-only, 8px radius, filled buttons). The values here are the ones implemented in `apps/web/src/app/globals.css` and listed in `tokens.json`; `CLAUDE.md` carries the short non-negotiable form. If this document and the CSS ever disagree, fix the CSS.
+This is the design the website is built from, decided 9 October 2026 after the homepage options review. It replaces the v2 system (Montserrat-only, 8px radius, filled buttons). The values here are the ones implemented as Tailwind CSS v4 tokens (the `@theme` block) in `apps/web/src/app/globals.css` and listed in `tokens.json`; `CLAUDE.md` carries the short non-negotiable form. If this document and the CSS ever disagree, fix the CSS.
 
 The reference layouts are on the Kempyre design canvas (`OptionC` desktop 1440 and `PhoneC` 390): https://claude.ai/artifact/RgLRqq7BfdzKa8sVDrfz9g
 

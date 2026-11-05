@@ -6,7 +6,6 @@ import { useSyncExternalStore } from "react";
 import type { SiteSettings } from "@/content/types";
 import { clinicClock } from "@/lib/hours";
 import { getDictionary, t, type Locale } from "@/lib/i18n";
-import styles from "./AnnouncementBar.module.css";
 
 /**
  * The announcement bar from Site settings ("Flu shots from October", "Closed Monday").
@@ -22,8 +21,8 @@ export function AnnouncementBar({ announcement, locale }: { announcement: SiteSe
 
   const text = t(announcement.text, locale);
   return (
-    <div className={styles.bar} role="region" aria-label={getDictionary(locale).announcement}>
-      <p className="wrap">{announcement.href ? <a href={announcement.href}>{text}</a> : text}</p>
+    <div className="bg-surface-alt text-ui font-medium text-ink" role="region" aria-label={getDictionary(locale).announcement}>
+      <p className="wrap max-w-none py-3">{announcement.href ? <a href={announcement.href}>{text}</a> : text}</p>
     </div>
   );
 }

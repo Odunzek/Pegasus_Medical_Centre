@@ -13,6 +13,10 @@ import { clinicJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 import { lora, montserrat } from "../fonts";
 import "../globals.css";
 
+/** "Skip to content": parked above the screen (200% of its own height) until a keyboard user tabs to it. */
+const SKIP_LINK =
+  "absolute top-2 left-2 z-100 -translate-y-[200%] rounded-full bg-white px-5 py-3 font-semibold text-ink focus-visible:translate-y-0";
+
 /** Pre-builds every language at deploy time. */
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -45,7 +49,7 @@ export default async function RootLayout({ children, params }: LayoutProps<"/[la
   return (
     <html lang={langTag[locale]} className={`${lora.variable} ${montserrat.variable}`}>
       <body>
-        <a href="#content" className="skip-link">
+        <a href="#content" className={SKIP_LINK}>
           {dict.skipToContent}
         </a>
         <SiteHeader locale={locale} dict={dict} clinicName={settings.clinicName} languagesEnabled={settings.languagesEnabled} book={book} phone={phone} />

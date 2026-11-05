@@ -69,7 +69,7 @@ export default async function GeneralPage({ params }: PageProps<"/[lang]/[page]"
               return (
                 <div key={i} className="stack">
                   {section.heading ? <h2>{t(section.heading, lang)}</h2> : null}
-                  <ol className="measure steps">
+                  <ol className="max-w-measure list-decimal space-y-3 pl-6">
                     {section.steps.map((step, j) => (
                       <li key={j}>{t(step, lang)}</li>
                     ))}
@@ -78,7 +78,7 @@ export default async function GeneralPage({ params }: PageProps<"/[lang]/[page]"
               );
             case "twoColumn":
               return (
-                <div key={i} className="measure stack">
+                <div key={i} className="stack max-w-measure">
                   <p>{t(section.left, lang)}</p>
                   <p>{t(section.right, lang)}</p>
                 </div>
@@ -93,7 +93,7 @@ export default async function GeneralPage({ params }: PageProps<"/[lang]/[page]"
             default:
               // image and faqGroup sections: built in the general-pages chunk. Visible on previews so nothing is silently lost.
               return showDrafts ? (
-                <p key={i} className="small">
+                <p key={i} className="text-small">
                   [{section.type} section: not rendered yet]
                 </p>
               ) : null;

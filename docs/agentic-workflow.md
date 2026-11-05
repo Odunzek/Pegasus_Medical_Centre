@@ -13,7 +13,7 @@ These came from research into what works in agentic coding (October 2026) and fr
 1. **Write the truth down once, then point everyone at it.** `CLAUDE.md` is the rulebook; the docs it links are the sources. No rule lives only in a conversation.
 2. **One builder, many narrow reviewers.** The main session builds. Read-only agents each answer one question about a diff. No orchestrator agent, no swarm.
 3. **Verification over frameworks.** Lint, typecheck, a fact gate, the build and a browser smoke test run on every change; a reviewer's opinion never replaces evidence.
-4. **Nothing hard-coded, everything explained.** Facts, strings, colours, sizes, URLs and numbers live in records, dictionaries, CSS variables, constants or environment variables. Every file and every export carries a plain-English comment saying what it is for and why, so a person who did not write it can read it.
+4. **Nothing hard-coded, everything explained.** Facts, strings, colours, sizes, URLs and numbers live in records, dictionaries, Tailwind design tokens, constants or environment variables. Every file and every export carries a plain-English comment saying what it is for and why, so a person who did not write it can read it.
 5. **Facts are not words.** The clinic's facts live in records; copy never repeats them. Anything unconfirmed is in square brackets and every record is a draft until the clinic approves it.
 6. **Built for the whole life of the site**, not the next page: multi-location from day one, a launch checklist, a maintenance routine, and a client-brief format, all before the second page exists.
 
@@ -26,7 +26,7 @@ These came from research into what works in agentic coding (October 2026) and fr
 | `docs/content-model-v1.md` (v1.1) | The seven record types and their fields; principles (one fact in one place, draft until approved, one slug per record). `apps/web/src/content/types.ts` mirrors it field for field. | architecture-reviewer, anyone touching data or schema. |
 | `docs/client-facts-2026-10-04.md` | The only source of real-world facts; what the questionnaire answered and what it did not; the rebrand and listings. | content-reviewer, copywriter, everyone. |
 | `docs/voice-and-content-guide.md` | Voice, CPSO/PHIPA limits, formats, fr-CA and pt-PT rules, glossary, page purposes, approval checklist. | copywriter, translator, content-reviewer. |
-| `design/tokens.json` (v3), `design/README.md` | The design system for direction C. They agree with `apps/web/src/app/globals.css`; if not, the CSS is wrong. | design-reviewer. |
+| `design/tokens.json` (v3), `design/README.md` | The design system for direction C. They agree with the Tailwind `@theme` tokens in `apps/web/src/app/globals.css`; if not, the CSS is wrong. | design-reviewer. |
 | `docs/launch-checklist.md`, `docs/maintenance.md` | Pre-launch items with an evidence column; the monthly retainer routine and holiday-hours reminder. | launch-checklist skill, Kachi. |
 | `docs/content-map.md` | Page-by-page content and search plan (to be built with the `content-map` skill). | copywriter, seo-reviewer. |
 | `docs/architecture/index.html` | Client-facing diagram of how the system fits together. | The client. |
@@ -86,6 +86,7 @@ Sessions that cannot push (this is true of some cloud sessions) hand the commit 
 - **Booking** is an outbound link from Site settings, same tab; blank means "Call to book". **Enquiry form** sends name, phone and preferred day only (Formspree proposed). **Analytics**: GA4 via GTM, page views and Book clicks only.
 - **Rebrand**: the Google Business Profile is renamed, never recreated; `alternateName: York Health Choice Centre` in structured data; whether the old name appears on the site is the client's call.
 - **Stock photos** are stand-ins flagged `temporary`, badged on previews, refused in production.
+- **Tailwind CSS v4 for styling** (4 November 2026, replacing CSS Modules) so contributors can work in the toolkit most Next.js developers already use. The brand's tokens live in `@theme` in `globals.css` and Tailwind's default colours and type sizes are switched off, so the utilities can only produce on-brand values; arbitrary values are not allowed outside named constants. The switch was checked page by page: screenshots before and after were pixel-identical.
 
 ## 9. Where the build stands (10 October 2026)
 
