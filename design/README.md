@@ -1,6 +1,6 @@
 # Pegasus Medical Centre: website design system (v3, direction C)
 
-This is the design the website is built from, decided 9 October 2026 after the homepage options review. It replaces the v2 system (Montserrat-only, 8px radius, filled buttons). The values here are the ones implemented in `apps/web/src/app/globals.css` and listed in `tokens.json`; `CLAUDE.md` carries the short non-negotiable form. If this document and the CSS ever disagree, fix the CSS.
+This is the design the website is built from, decided 9 October 2026 after the homepage options review. It replaces the v2 system (Montserrat-only, 8px radius, filled buttons). The values here are the ones implemented as Tailwind CSS v4 tokens (the `@theme` block) in `apps/web/src/app/globals.css` and listed in `tokens.json`; `CLAUDE.md` carries the short non-negotiable form. If this document and the CSS ever disagree, fix the CSS.
 
 The reference layouts are on the Kempyre design canvas (`OptionC` desktop 1440 and `PhoneC` 390): https://claude.ai/artifact/RgLRqq7BfdzKa8sVDrfz9g
 
@@ -86,7 +86,7 @@ Sections rise 24px and fade in once as they enter the viewport. The hero's headl
 
 ## Logo, icons and graphics
 
-- Logo files are the brand package v1.4 SVGs (spelling CENTRE) in `apps/web/public/brand/`, with the print clear space cropped for the web. Use the `Logo` component; never redraw, recolour or retype. White on Deep Teal and photos; full colour on white; the compact cut on phones.
+- Logo files are the brand package v1.4 SVGs (spelling CENTRE) in `apps/web/public/brand/`, with the print clear space cropped for the web. Use the `Logo` component; never redraw, recolour or retype. Reversed-colour on Deep Teal (header, footer); full-colour on white; white only on photos; the compact cut on phones.
 - Website icons are drawn inline as SVG in `Icon.tsx` on the brand's 48-unit grid with a 3-unit round-capped line, so they take the text colour wherever they sit (decided 9 October 2026 in place of the supplied three-ink PNG/SVG files, which cannot be recoloured). Always paired with a word.
 - Supporting graphics from the brand package: the feather-line pattern (see Colour). The brand arc, leaf accent and divider rule are available but unused in direction C.
 
